@@ -404,7 +404,7 @@
         <!-- Bagian Copyright Bawah -->
         <div class="max-w-7xl mx-auto border-t border-blue-900/50 mt-8 pt-6 text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left">
             <div>
-                &copy; 2026 Bengkel Renang. All rights reserved.
+                &copy; 2026 Reyhnthra. All rights reserved.
             </div>
 
             <div>
