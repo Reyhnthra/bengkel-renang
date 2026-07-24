@@ -37,7 +37,7 @@
             <div class="space-y-1.5">
                 <label for="email" class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">Email Pelatih</label>
                 <div class="relative">
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="contoh: iqbal@bengkelrenang.com" class="w-full bg-[#E6F0FA] text-slate-800 font-bold placeholder-slate-400 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition" required>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" class="w-full bg-[#E6F0FA] text-slate-800 font-bold placeholder-slate-400 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition" required>
                 </div>
                 @error('email')
                     <span class="text-red-500 text-[10px] font-semibold block mt-1">{{ $message }}</span>
@@ -47,7 +47,7 @@
             <div class="space-y-1.5">
                 <label for="pin" class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">PIN Akses</label>
                 <div class="relative">
-                    <input type="password" id="pin" name="pin" maxlength="6" placeholder="••••" class="w-full bg-[#E6F0FA] text-slate-800 font-bold placeholder-slate-400 text-center tracking-[0.5em] rounded-2xl pl-12 pr-12 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition" required>
+                    <input type="password" id="pin" name="pin" maxlength="6" class="w-full bg-[#E6F0FA] text-slate-800 font-bold placeholder-slate-400 text-center tracking-[0.5em] rounded-2xl pl-12 pr-12 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition" required>
                     
                     <button type="button" onclick="togglePinVisibility()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer focus:outline-none">
                         <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -59,10 +59,6 @@
                 @error('pin')
                     <span class="text-red-500 text-[10px] font-semibold block mt-1">{{ $message }}</span>
                 @enderror
-            </div>
-
-            <div class="text-[11px] text-slate-400 font-medium pt-0.5">
-                Hint: PIN default pelatih adalah <span class="font-bold text-slate-500">1234</span>
             </div>
 
             <button type="submit" class="w-full bg-[#032B53] hover:bg-blue-900 text-white font-bold py-4 rounded-2xl text-sm shadow-md transition duration-200 flex items-center justify-center space-x-2 transform hover:scale-[1.02] cursor-pointer focus:outline-none">

@@ -6,6 +6,7 @@ use App\Models\Student;
 use App\Models\Session;
 use App\Models\ProgressReport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class CoachDashboardController extends Controller
@@ -64,26 +65,28 @@ class CoachDashboardController extends Controller
     public function storeStudent(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'level' => 'required|string',
-            'nama_orang_tua' => 'required|string',
-            'no_orang_tua' => 'required|string',
-            'alamat' => 'required|string',
+            'nama'           => 'required|string|max:255',
+            'tanggal_lahir'  => 'required|date',
+            'level'          => 'required|string|max:100',
+            'nama_orang_tua' => 'required|string|max:255',
+            'no_orang_tua'   => 'required|string|max:20|regex:/^[0-9+\-\s()]+$/',
+            'alamat'         => 'required|string|max:500',
+        ], [
+            'no_orang_tua.regex' => 'Format nomor telepon orang tua tidak valid!',
         ]);
 
-        // Generate ID Unik otomatis ex: SWIM-A92B
-        $uniqueId = 'BR-' . strtoupper(substr(md5(uniqid()), 0, 3));
+        // Generate ID Unik 6 Karakter Acak (Tinggi Entropi, Mencegah Enumerasi ID)
+        $uniqueId = 'BR-' . strtoupper(Str::random(6));
 
         Student::create([
-            'id_tracking' => $uniqueId,
-            'nama' => $request->nama,
+            'id_tracking'   => $uniqueId,
+            'nama'          => $request->nama,
             'tanggal_lahir' => $request->tanggal_lahir,
-            'level' => $request->level,
-            'nama_orang_tua' => $request->nama_orang_tua,
-            'no_orang_tua' => $request->no_orang_tua,
-            'alamat' => $request->alamat,
-            'status' => 'aktif'
+            'level'         => $request->level,
+            'nama_orang_tua'=> $request->nama_orang_tua,
+            'no_orang_tua'  => $request->no_orang_tua,
+            'alamat'        => $request->alamat,
+            'status'        => 'aktif'
         ]);
 
         return redirect()->back()->with('success', 'Siswa baru berhasil ditambahkan! ID: ' . $uniqueId);
@@ -193,10 +196,13 @@ class CoachDashboardController extends Controller
 
         // 2. Kirim data ke modal (JavaScript)
         return response()->json([
+            'id'            => $student->id,
             'nama'          => $student->nama,
             'id_tracking'   => $student->id_tracking,
-            'tgl_gabung'    => $student->created_at->format('d M Y'),
-            'progress'      => $progPercent, // Hasil dari rumus yang sama
+            'tanggal_lahir'   => $student->tanggal_lahir,
+            'tgl_gabung'      => $student->created_at ? $student->created_at->format('d M Y') : '-',
+            'avatar_initials' => strtoupper(substr($student->nama, 0, 2)),
+            'progress'        => $progPercent, // Hasil dari rumus yang sama
             'gaya_bebas'    => $gBebas,
             'gaya_punggung' => $gPunggung,
             'gaya_dada'     => $gDada,
@@ -205,6 +211,10 @@ class CoachDashboardController extends Controller
             'streak'        => $student->sessions->where('attendance_status', 'hadir')->count(), 
             'level'         => $student->level ?? 'Pemula',
             'usia'          => $student->tanggal_lahir ? \Carbon\Carbon::parse($student->tanggal_lahir)->age : 0,
+            'nama_orang_tua'=> $student->nama_orang_tua ?? '-',
+            'no_orang_tua'  => $student->no_orang_tua ?? '-',
+            'alamat'        => $student->alamat ?? '-',
+            'status'        => $student->status ?? 'aktif',
             
             // Data pendukung lainnya
             'last_tgl'      => $latestAttendanceSession ? \Carbon\Carbon::parse($latestAttendanceSession->tanggal)->format('d M Y') : '-',
@@ -222,5 +232,44 @@ class CoachDashboardController extends Controller
             })->values()
         ]);
     }
-    
+
+    // 6. PROSES EDIT / UPDATE DATA SISWA
+    public function updateStudent(Request $request, $id)
+    {
+        $student = Student::findOrFail($id);
+
+        $request->validate([
+            'nama'           => 'required|string|max:255',
+            'tanggal_lahir'  => 'required|date',
+            'level'          => 'required|string|max:100',
+            'nama_orang_tua' => 'required|string|max:255',
+            'no_orang_tua'   => 'required|string|max:20|regex:/^[0-9+\-\s()]+$/',
+            'alamat'         => 'required|string|max:500',
+            'status'         => 'required|in:aktif,nonaktif',
+        ], [
+            'no_orang_tua.regex' => 'Format nomor telepon orang tua tidak valid!',
+        ]);
+
+        $student->update([
+            'nama'           => $request->nama,
+            'tanggal_lahir'  => $request->tanggal_lahir,
+            'level'          => $request->level,
+            'nama_orang_tua' => $request->nama_orang_tua,
+            'no_orang_tua'   => $request->no_orang_tua,
+            'alamat'         => $request->alamat,
+            'status'         => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'Data siswa ' . $student->nama . ' berhasil diperbarui!');
+    }
+
+    // 7. PROSES HAPUS SISWA
+    public function destroyStudent($id)
+    {
+        $student = Student::findOrFail($id);
+        $nama = $student->nama;
+        $student->delete();
+
+        return redirect()->back()->with('success', 'Data siswa ' . $nama . ' berhasil dihapus!');
+    }
 }

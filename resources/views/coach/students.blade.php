@@ -46,42 +46,82 @@
     <!-- Daftar List Box Kartu Siswa -->
     <div class="space-y-4">
         @foreach($students as $std)
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                <div class="flex justify-between items-start">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-12 h-12 bg-[#032B53] text-white font-extrabold rounded-2xl flex items-center justify-center text-sm shadow-sm">
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4 hover:shadow-md transition">
+                <div class="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-[#032B53] text-white font-extrabold rounded-2xl flex items-center justify-center text-sm shadow-sm shrink-0 mt-1">
                             {{ strtoupper(substr($std->nama, 0, 2)) }}
                         </div>
-                        <div>
-                            <div class="flex items-center space-x-2">
+                        <div class="space-y-2">
+                            <div class="flex flex-wrap items-center gap-2">
                                 <h3 class="font-extrabold text-base text-slate-900">{{ $std->nama }}</h3>
                                 <span class="bg-[#E6F0FA] text-blue-700 font-extrabold text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-blue-100">{{ $std->level }}</span>
+                                @if(($std->status ?? 'aktif') === 'aktif')
+                                    <span class="bg-emerald-50 text-emerald-600 border border-emerald-100 font-extrabold text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">● Aktif</span>
+                                @else
+                                    <span class="bg-slate-100 text-slate-500 border border-slate-200 font-extrabold text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">● Non-Aktif</span>
+                                @endif
                             </div>
-                            <p class="text-[11px] font-semibold text-slate-400 mt-1 uppercase tracking-wide">ID: {{ $std->id_tracking }} • {{ $std->usia }} thn</p>
-                            <span class="text-[11px] font-bold text-slate-500 block mt-1">📞 {{ $std->nama_orang_tua }} · {{ $std->no_orang_tua }}</span>
+
+                            <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">
+                                ID Tracking: <span class="font-bold text-slate-700">{{ $std->id_tracking }}</span> • Usia: {{ $std->usia }} thn ({{ $std->tanggal_lahir ? \Carbon\Carbon::parse($std->tanggal_lahir)->format('d M Y') : '-' }})
+                            </p>
+
+                            <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600 font-medium bg-slate-50 p-2.5 rounded-xl border border-slate-100/80">
+                                <span>👤 <strong class="text-slate-700">Wali:</strong> {{ $std->nama_orang_tua }}</span>
+                                <span>📞 <strong class="text-slate-700">WA:</strong> {{ $std->no_orang_tua }}</span>
+                                <span>📍 <strong class="text-slate-700">Alamat:</strong> {{ $std->alamat }}</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="text-right flex items-center space-x-4">
-                        <div class="text-center">
-                            <span class="text-xl font-extrabold text-slate-900 block">{{ $std->sessions->count() }}</span>
-                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Sesi</span>
+                    <div class="flex flex-wrap items-center justify-between lg:justify-end gap-3 pt-3 lg:pt-0 border-t lg:border-t-0 border-slate-100">
+                        <div class="flex space-x-4 mr-2">
+                            <div class="text-center">
+                                <span class="text-xl font-extrabold text-slate-900 block">{{ $std->sessions->count() }}</span>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Sesi</span>
+                            </div>
+
+                            <div class="text-center">
+                                <span class="text-xl font-extrabold text-teal-600 block">{{ $std->calculateOverallProgress() }}%</span>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Progress</span>
+                            </div>
                         </div>
 
-                        <div class="text-center">
-                            <span class="text-xl font-extrabold text-teal-600 block">{{ $std->calculateOverallProgress() }}%</span>
-                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Progress</span>
-                        </div>
+                        <div class="flex items-center space-x-2">
+                            <!-- Tombol Detail -->
+                            <button onclick="openDetailModal({{ $std->id }})" 
+                                    class="border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs px-3.5 py-2.5 rounded-xl shadow-xs transition flex items-center space-x-1 cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <span>Detail</span>
+                            </button>
 
-                        <button onclick="openDetailModal({{ $std->id }})" 
-                                class="border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition flex items-center space-x-1.5 group cursor-pointer ml-4">
-                            <span>Detail</span>
-                        </button>
+                            <!-- Tombol Edit -->
+                            <button onclick='openEditModal({id: {{ $std->id }}, nama: @json($std->nama), tanggal_lahir: @json($std->tanggal_lahir), level: @json($std->level), nama_orang_tua: @json($std->nama_orang_tua), no_orang_tua: @json($std->no_orang_tua), alamat: @json($std->alamat), status: @json($std->status ?? "aktif")})'
+                                    class="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 font-bold text-xs px-3.5 py-2.5 rounded-xl shadow-xs transition flex items-center space-x-1 cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                <span>Edit</span>
+                            </button>
+
+                            <!-- Tombol Hapus -->
+                            <button onclick="openDeleteModal({{ $std->id }}, @json($std->nama))" 
+                                    class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-xs px-3.5 py-2.5 rounded-xl shadow-xs transition flex items-center space-x-1 cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                <span>Hapus</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         @endforeach
-</div>
+    </div>
     <!-- Pagination -->
 </div>
 
@@ -241,32 +281,32 @@
                 <p id="badge-earned-count" class="text-xs font-bold text-slate-400 tracking-wide">0 dari 4 badge diraih</p>
                 
                 <div class="grid grid-cols-2 gap-4 text-center">
-                    <div id="badge-card-bebas" class="bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all opacity-35 grayscale border-slate-100">
-                        <div class="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 mb-2">
+                    <div id="badge-card-bebas" class="bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all opacity-40 grayscale border-slate-100">
+                        <div class="badge-icon-box w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-700 mb-2">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="h-6 w-6"><path d="M2 16c2-1 4-1 6 0s4 1 6 0 4-1 6 0" /><path d="M15.5 10c-1-2.5-3.5-3.5-5.5-2.5s-2.5 3.5-1 5.5l2.5 3" /><circle cx="15.5" cy="5.5" r="1.5" fill="currentColor"/></svg>
                         </div>
                         <h5 class="font-extrabold text-xs text-slate-800">Gaya Bebas</h5>
                         <span class="text-[10px] font-bold block mt-1 text-slate-400">Belum</span>
                     </div>
 
-                    <div id="badge-card-punggung" class="bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all opacity-35 grayscale border-slate-100">
-                        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-2">
+                    <div id="badge-card-punggung" class="bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all opacity-40 grayscale border-slate-100">
+                        <div class="badge-icon-box w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-700 mb-2">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="h-6 w-6"><path d="M2 11c2 1 4 1 6 0s4-1 6 0" /><path d="M8.5 11c0-2.5 1.5-4.5 4-4.5s4 2 4 4.5v1.5" /><circle cx="12.5" cy="4" r="1.5" fill="currentColor"/></svg>
                         </div>
                         <h5 class="font-extrabold text-xs text-slate-800">Gaya Punggung</h5>
                         <span class="text-[10px] font-bold block mt-1 text-slate-400">Belum</span>
                     </div>
 
-                    <div id="badge-card-dada" class="bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all opacity-35 grayscale border-slate-100">
-                        <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 mb-2">
+                    <div id="badge-card-dada" class="bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all opacity-40 grayscale border-slate-100">
+                        <div class="badge-icon-box w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-700 mb-2">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="h-6 w-6"><circle cx="12" cy="5" r="1.5" fill="currentColor"/><path d="M4 11c2-2 5-2.5 8-1s6 1 8-1" /><path d="M2 17c3-1 6 1 10 0s7-1 10 0" /></svg>
                         </div>
                         <h5 class="font-extrabold text-xs text-slate-800">Gaya Dada</h5>
                         <span class="text-[10px] font-bold block mt-1 text-slate-400">Belum</span>
                     </div>
 
-                    <div id="badge-card-kupu" class="bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all opacity-35 grayscale border-slate-100">
-                        <div class="w-12 h-12 bg-pink-50 rounded-2xl flex items-center justify-center text-pink-500 mb-2">
+                    <div id="badge-card-kupu" class="bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all opacity-40 grayscale border-slate-100">
+                        <div class="badge-icon-box w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-700 mb-2">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="h-6 w-6"><circle cx="12" cy="6" r="1.5" fill="currentColor"/><path d="M3 10c2-3.5 5-2.5 9 .5 4-3 7-4 9-.5" /><path d="M2 17c4-2 6 2 10 0s6-2 10 0" /></svg>
                         </div>
                         <h5 class="font-extrabold text-xs text-slate-800">Gaya Kupu-kupu</h5>
@@ -336,12 +376,138 @@
         </form>
     </div>
 </div>
+
+<!-- ==================== BOX DIALOG MODAL EDIT DATA SISWA ==================== -->
+<div id="editModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[32px] w-full max-w-lg shadow-2xl overflow-hidden p-6 sm:p-8 relative border border-slate-100">
+        
+        <button onclick="closeEditModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 font-bold text-sm cursor-pointer focus:outline-none">✕</button>
+        
+        <h2 class="text-xl font-extrabold text-[#032B53] mb-6 flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span>Edit Data Siswa</span>
+        </h2>
+        
+        <form id="editForm" method="POST" class="space-y-4 text-xs font-bold text-slate-500 uppercase tracking-wider">
+            @csrf
+            @method('PUT')
+            
+            <div class="space-y-1.5">
+                <label>Nama Lengkap Siswa</label>
+                <input type="text" id="edit_nama" name="nama" class="w-full bg-[#E6F0FA] text-slate-800 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase font-bold" required>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label>Tanggal Lahir</label>
+                    <input type="date" id="edit_tanggal_lahir" name="tanggal_lahir" class="w-full bg-[#E6F0FA] text-slate-800 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold cursor-pointer" required>
+                </div>
+                <div class="space-y-1.5">
+                    <label>Level</label>
+                    <select id="edit_level" name="level" class="w-full bg-[#E6F0FA] text-slate-800 rounded-xl px-4 py-3.5 focus:outline-none font-bold cursor-pointer">
+                        <option value="Toddler Splash">Toddler Splash</option>
+                        <option value="Junior Swimmer">Junior Swimmer</option>
+                        <option value="Competitive Edge">Competitive Edge</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label>Status Siswa</label>
+                    <select id="edit_status" name="status" class="w-full bg-[#E6F0FA] text-slate-800 rounded-xl px-4 py-3.5 focus:outline-none font-bold cursor-pointer">
+                        <option value="aktif">Aktif</option>
+                        <option value="nonaktif">Non-Aktif</option>
+                    </select>
+                </div>
+                <div class="space-y-1.5">
+                    <label>Nomor WhatsApp</label>
+                    <input type="text" id="edit_no_orang_tua" name="no_orang_tua" class="w-full bg-[#E6F0FA] text-slate-800 rounded-xl px-4 py-3.5 focus:outline-none font-bold" required>
+                </div>
+            </div>
+
+            <div class="border-t border-dashed border-slate-200 my-4 pt-4 text-center text-slate-400 tracking-normal normal-case font-semibold text-xs">Data Orang Tua & Alamat</div>
+            
+            <div class="space-y-1.5">
+                <label>Nama Orang Tua / Wali</label>
+                <input type="text" id="edit_nama_orang_tua" name="nama_orang_tua" class="w-full bg-[#E6F0FA] text-slate-800 rounded-xl px-4 py-3.5 focus:outline-none font-bold" required>
+            </div>
+            
+            <div class="space-y-1.5">
+                <label>Alamat</label>
+                <input type="text" id="edit_alamat" name="alamat" class="w-full bg-[#E6F0FA] text-slate-800 rounded-xl px-4 py-3.5 focus:outline-none font-bold" required>
+            </div>
+            
+            <div class="flex space-x-3 mt-6">
+                <button type="button" onclick="closeEditModal()" class="w-1/3 bg-slate-100 text-slate-600 font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider hover:bg-slate-200 transition cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" class="w-2/3 bg-amber-500 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-md hover:bg-amber-600 transition cursor-pointer">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ==================== BOX DIALOG MODAL HAPUS SISWA ==================== -->
+<div id="deleteModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[32px] w-full max-w-md shadow-2xl overflow-hidden p-6 sm:p-8 relative border border-slate-100 text-center space-y-4">
+        <button onclick="closeDeleteModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 font-bold text-sm cursor-pointer focus:outline-none">✕</button>
+        
+        <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-sm">
+            🗑️
+        </div>
+        
+        <div>
+            <h3 class="text-lg font-extrabold text-slate-900">Hapus Data Siswa?</h3>
+            <p class="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+                Apakah Anda yakin ingin menghapus data <strong id="delete_student_name" class="text-slate-800"></strong>? Seluruh riwayat absensi dan perkembangan latihan siswa akan terhapus secara permanen.
+            </p>
+        </div>
+
+        <form id="deleteForm" method="POST" class="pt-2">
+            @csrf
+            @method('DELETE')
+            <div class="flex space-x-3">
+                <button type="button" onclick="closeDeleteModal()" class="w-1/2 bg-slate-100 text-slate-600 font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider hover:bg-slate-200 transition cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" class="w-1/2 bg-red-600 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-md hover:bg-red-700 transition cursor-pointer">
+                    Ya, Hapus
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
 <script>
     function openAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
     function closeAddModal() { document.getElementById('addModal').classList.add('hidden'); }
+
+    function openEditModal(student) {
+        document.getElementById('editForm').action = `/coach/students/${student.id}`;
+        document.getElementById('edit_nama').value = student.nama || '';
+        document.getElementById('edit_tanggal_lahir').value = student.tanggal_lahir || '';
+        document.getElementById('edit_level').value = student.level || 'Toddler Splash';
+        document.getElementById('edit_status').value = student.status || 'aktif';
+        document.getElementById('edit_nama_orang_tua').value = student.nama_orang_tua || '';
+        document.getElementById('edit_no_orang_tua').value = student.no_orang_tua || '';
+        document.getElementById('edit_alamat').value = student.alamat || '';
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+    function closeEditModal() { document.getElementById('editModal').classList.add('hidden'); }
+
+    function openDeleteModal(id, name) {
+        document.getElementById('deleteForm').action = `/coach/students/${id}`;
+        document.getElementById('delete_student_name').innerText = name;
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+    function closeDeleteModal() { document.getElementById('deleteModal').classList.add('hidden'); }
 
     function switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -391,9 +557,10 @@
             document.getElementById('det-card-streak').innerText = (data.streak ?? 0) + "x";
             document.getElementById('det-card-progress').innerText = (data.progress ?? 0) + "%";
             
-            // Update Progress Bar
-            document.getElementById('det-bar-text-progress').innerText = (data.progress ?? 0) + "%";
-            document.getElementById('det-bar-progress').style.width = (data.progress ?? 0) + "%";
+            // Update Progress Bar & Tanggal Bergabung
+            if (document.getElementById('det-bar-text-progress')) document.getElementById('det-bar-text-progress').innerText = (data.progress ?? 0) + "%";
+            if (document.getElementById('det-bar-progress')) document.getElementById('det-bar-progress').style.width = (data.progress ?? 0) + "%";
+            if (document.getElementById('modal-tgl-gabung')) document.getElementById('modal-tgl-gabung').innerText = data.tgl_gabung || "-";
             
             // Update Gaya (Dengan Safety Guard || 0)
             const bebas = data.gaya_bebas ?? 0;
@@ -457,22 +624,27 @@
 
             let earned = 0;
             Object.keys(badges).forEach(key => {
-                // Gunakan >= 100 agar aman jika nilainya lebih dari 100
                 const isUnlocked = badges[key] >= 100; 
                 const el = document.getElementById('badge-card-' + key); 
 
-                if (el) { // Cek apakah elemennya ada
+                if (el) {
+                    const iconBox = el.querySelector('.badge-icon-box');
+                    const textSpan = el.querySelector('span');
                     if (isUnlocked) {
                         earned++;
-                        el.classList.remove('opacity-35', 'grayscale', 'border-slate-100');
-                        el.classList.add('border-teal-200', 'shadow-sm', 'bg-teal-50');
-                        el.querySelector('span').innerText = '✓ Diraih';
-                        el.querySelector('span').classList.replace('text-slate-400', 'text-teal-600');
+                        el.className = 'bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all border-teal-200 shadow-sm bg-teal-50/50';
+                        if (iconBox) iconBox.className = 'badge-icon-box w-12 h-12 bg-white shadow-xs rounded-2xl flex items-center justify-center text-slate-700 mb-2';
+                        if (textSpan) {
+                            textSpan.innerText = '✓ Diraih';
+                            textSpan.className = 'text-[10px] font-bold block mt-1 text-teal-600';
+                        }
                     } else {
-                        el.classList.add('opacity-35', 'grayscale', 'border-slate-100');
-                        el.classList.remove('border-teal-200', 'shadow-sm', 'bg-teal-50');
-                        el.querySelector('span').innerText = 'Belum';
-                        el.querySelector('span').classList.replace('text-teal-600', 'text-slate-400');
+                        el.className = 'bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all opacity-40 grayscale border-slate-100';
+                        if (iconBox) iconBox.className = 'badge-icon-box w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-700 mb-2';
+                        if (textSpan) {
+                            textSpan.innerText = 'Belum';
+                            textSpan.className = 'text-[10px] font-bold block mt-1 text-slate-400';
+                        }
                     }
                 }
             });

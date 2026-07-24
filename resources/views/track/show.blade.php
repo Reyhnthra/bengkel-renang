@@ -144,6 +144,37 @@
                         <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden"><div class="bg-pink-500 h-full rounded-full" style="width: {{ $gKupu }}%"></div></div>
                     </div>
                 </div>
+
+                <div class="bg-teal-50/60 p-4 rounded-2xl border border-teal-100/50 space-y-2">
+                    <div class="flex justify-between items-center text-[10px] font-black uppercase text-teal-600 tracking-wider">
+                        <span>🕒 Sesi Terakhir</span>
+                        <span>{{ $latestSession ? \Carbon\Carbon::parse($latestSession->tanggal)->translatedFormat('d M Y') : '-' }}</span>
+                    </div>
+                    <h4 class="font-extrabold text-xs text-[#032B53]">{{ $latestSession->topik_sesi ?? '-' }}</h4>
+                    <p class="text-[11px] font-medium text-slate-500 italic leading-relaxed">"{{ $lastReport->catatan ?? 'Belum ada catatan.' }}"</p>
+                </div>
+
+                <div class="space-y-3 text-center border-t border-slate-100 pt-5">
+                    <h4 class="text-xs font-black text-slate-800 uppercase tracking-wider text-left">Radar Keterampilan</h4>
+                    <div class="flex justify-center items-center py-4">
+                        <svg width="150" height="140" viewBox="0 0 100 100" class="transform -rotate-90">
+                            <circle cx="50" cy="50" r="40" fill="transparent" stroke="#F1F5F9" stroke-width="5"/>
+                            <circle cx="50" cy="50" r="40" fill="transparent" stroke="#00A79D" stroke-width="5" stroke-dasharray="251.3" stroke-dashoffset="{{ 251.3 - ($gBebas * 251.3 / 100) }}" stroke-linecap="round"/>
+                            <circle cx="50" cy="50" r="32" fill="transparent" stroke="#F1F5F9" stroke-width="5"/>
+                            <circle cx="50" cy="50" r="32" fill="transparent" stroke="#032B53" stroke-width="5" stroke-dasharray="201.1" stroke-dashoffset="{{ 201.1 - ($gPunggung * 201.1 / 100) }}" stroke-linecap="round"/>
+                            <circle cx="50" cy="50" r="24" fill="transparent" stroke="#F1F5F9" stroke-width="5"/>
+                            <circle cx="50" cy="50" r="24" fill="transparent" stroke="#FDB813" stroke-width="5" stroke-dasharray="150.8" stroke-dashoffset="{{ 150.8 - ($gDada * 150.8 / 100) }}" stroke-linecap="round"/>
+                            <circle cx="50" cy="50" r="16" fill="transparent" stroke="#F1F5F9" stroke-width="5"/>
+                            <circle cx="50" cy="50" r="16" fill="transparent" stroke="#EC4899" stroke-width="5" stroke-dasharray="100.5" stroke-dashoffset="{{ 100.5 - ($gKupu * 100.5 / 100) }}" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                        <div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#00A79D]"></span><span>Gaya Bebas</span></div>
+                        <div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#032B53]"></span><span>Gaya Punggung</span></div>
+                        <div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#FDB813]"></span><span>Gaya Dada</span></div>
+                        <div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#EC4899]"></span><span>Gaya Kupu</span></div>
+                    </div>
+                </div>
             </div>
 
             <div id="tab-riwayat-content" class="tab-content hidden space-y-4 max-h-[45vh] overflow-y-auto pr-1 modal-scroll">
@@ -193,7 +224,37 @@
             </div>
             
             <div id="tab-badge-content" class="tab-content hidden space-y-4">
-                <p class="text-xs font-bold text-slate-400 tracking-wide">Badge Progress</p>
+                @php
+                    $badgesList = [
+                        'bebas' => ['nama' => 'Gaya Bebas', 'val' => $gBebas, 'color' => 'teal', 'icon' => '<path d="M2 16c2-1 4-1 6 0s4 1 6 0 4-1 6 0" /><path d="M15.5 10c-1-2.5-3.5-3.5-5.5-2.5s-2.5 3.5-1 5.5l2.5 3" /><circle cx="15.5" cy="5.5" r="1.5" fill="currentColor"/>'],
+                        'punggung' => ['nama' => 'Gaya Punggung', 'val' => $gPunggung, 'color' => 'blue', 'icon' => '<path d="M2 11c2 1 4 1 6 0s4-1 6 0" /><path d="M8.5 11c0-2.5 1.5-4.5 4-4.5s4 2 4 4.5v1.5" /><circle cx="12.5" cy="4" r="1.5" fill="currentColor"/>'],
+                        'dada' => ['nama' => 'Gaya Dada', 'val' => $gDada, 'color' => 'amber', 'icon' => '<circle cx="12" cy="5" r="1.5" fill="currentColor"/><path d="M4 11c2-2 5-2.5 8-1s6 1 8-1" /><path d="M2 17c3-1 6 1 10 0s7-1 10 0" />'],
+                        'kupu' => ['nama' => 'Gaya Kupu-kupu', 'val' => $gKupu, 'color' => 'pink', 'icon' => '<circle cx="12" cy="6" r="1.5" fill="currentColor"/><path d="M3 10c2-3.5 5-2.5 9 .5 4-3 7-4 9-.5" /><path d="M2 17c4-2 6 2 10 0s6-2 10 0" />'],
+                    ];
+                    $earnedCount = 0;
+                    foreach($badgesList as $b) {
+                        if($b['val'] >= 100) $earnedCount++;
+                    }
+                @endphp
+                
+                <p class="text-xs font-bold text-slate-400 tracking-wide">{{ $earnedCount }} dari 4 badge diraih</p>
+
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    @foreach($badgesList as $key => $b)
+                        @php $isUnlocked = $b['val'] >= 100; @endphp
+                        <div class="bg-white border p-5 rounded-2xl flex flex-col items-center justify-center transition-all {{ $isUnlocked ? 'border-teal-200 shadow-sm bg-teal-50/50' : 'opacity-40 grayscale border-slate-100' }}">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-2 {{ $isUnlocked ? 'bg-white shadow-xs' : 'bg-slate-100' }}">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="h-6 w-6 text-slate-700">
+                                    {!! $b['icon'] !!}
+                                </svg>
+                            </div>
+                            <h5 class="font-extrabold text-xs text-slate-800">{{ $b['nama'] }}</h5>
+                            <span class="text-[10px] font-bold block mt-1 {{ $isUnlocked ? 'text-teal-600' : 'text-slate-400' }}">
+                                {{ $isUnlocked ? '✓ Diraih' : 'Belum' }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
@@ -247,10 +308,12 @@
 
                         <!-- Score Circle -->
                         <div class="mt-2.5 flex justify-center">
-                            <div class="relative w-24 h-24">
-                                <div class="absolute inset-0 rounded-full border-[6px] border-teal-500/20"></div>
-                                <div class="absolute inset-0 rounded-full border-[6px] border-transparent border-t-teal-400 border-r-teal-400 shadow-[0_0_15px_rgba(45,212,191,0.5)] transform -rotate-45"></div>
-                                <div class="absolute inset-0 flex flex-col items-center justify-center bg-teal-900/40 rounded-full backdrop-blur-sm m-1.5">
+                            <div class="relative w-24 h-24 flex items-center justify-center">
+                                <svg width="96" height="96" viewBox="0 0 96 96" class="transform -rotate-90">
+                                    <circle cx="48" cy="48" r="40" fill="transparent" stroke="rgba(20, 184, 166, 0.2)" stroke-width="6"/>
+                                    <circle id="story-score-ring" cx="48" cy="48" r="40" fill="transparent" stroke="#2DD4BF" stroke-width="6" stroke-dasharray="251.32" stroke-dashoffset="251.32" stroke-linecap="round" class="transition-all duration-500 drop-shadow-[0_0_8px_rgba(45,212,191,0.6)]"/>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center bg-teal-900/40 rounded-full backdrop-blur-sm m-2">
                                     <span id="story-score" class="text-4xl font-extrabold leading-none tracking-tight">90</span>
                                     <span class="text-[9px] text-teal-200 font-bold">/ 100</span>
                                 </div>
@@ -326,7 +389,7 @@
                             <p id="story-quote" class="text-[11px] font-semibold text-teal-50 italic relative z-10 leading-snug text-center">
                                 "Sangat baik! Pernapasan sudah ritmis dan konsisten."
                             </p>
-                            <p class="text-[9px] text-teal-200/80 mt-1.5 font-medium text-center">— Mr. Iqbal, Pelatih</p>
+                            <p class="text-[9px] text-teal-200/80 mt-1.5 font-medium text-center">— Mr. Iqbal</p>
                         </div>
                     </div>
 
@@ -505,6 +568,13 @@
             const gDada = parseInt(data.dada) || 0;
             const gKupu = parseInt(data.kupu) || 0;
             const average = parseInt(data.score) || 0;
+
+            const scoreRing = document.getElementById('story-score-ring');
+            if (scoreRing) {
+                const clampedScore = Math.min(Math.max(average, 0), 100);
+                const offset = 251.32 - (251.32 * clampedScore / 100);
+                scoreRing.style.strokeDashoffset = offset;
+            }
 
             document.getElementById('story-score').innerText = average;
             document.getElementById('story-date').innerText = formatLocalDate(data.tanggal);
