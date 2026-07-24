@@ -6,6 +6,7 @@
     <title>Progress Tracking - {{ $student->nama }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body { 
@@ -494,11 +495,11 @@
                 </label>
 
                 <!-- Download Button -->
-                <button onclick="shareStory()" id="btn-share" class="bg-gradient-to-r from-pink-500 via-purple-500 to-orange-500 hover:opacity-90 text-white font-bold text-sm py-2.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                    <span id="share-text">Bagikan ke IG Story</span>
+                <button onclick="downloadStoryImage()" id="btn-share" class="bg-gradient-to-r from-pink-500 via-purple-500 to-orange-500 hover:opacity-90 text-white font-bold text-sm py-2.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span id="share-text">Unduh Gambar untuk IG Story</span>
                 </button>
-                <p class="text-center text-[9px] text-white/50 pt-0.5">Otomatis unduh jika tidak ada fitur IG Story</p>
+                <p class="text-center text-[10px] text-white/70 pt-0.5 font-medium">Unduh gambar lalu unggah ke Story Instagram Anda</p>
             </div>
         </div>
     </div>
@@ -652,72 +653,144 @@
             }
         }
 
-        async function shareStory() {
+        async function downloadStoryImage() {
             const btn = document.getElementById('btn-share');
             const text = document.getElementById('share-text');
             const originalText = text.innerText;
-            text.innerText = "Memproses...";
+            text.innerText = "Mengunduh...";
             btn.disabled = true;
 
-            const storyEl = currentTemplate === 1 ? document.getElementById('story-template') : document.getElementById('story-template-2');
-            const wrapper = document.getElementById('story-scale-wrapper');
+            const targetId = currentTemplate === 1 ? 'story-template' : 'story-template-2';
+            const originalStoryEl = document.getElementById(targetId);
+            if (!originalStoryEl) {
+                text.innerText = originalText;
+                btn.disabled = false;
+                return;
+            }
+
+            // Create off-screen clone container to prevent screen flickering during canvas capture
+            const cloneContainer = document.createElement('div');
+            cloneContainer.style.position = 'fixed';
+            cloneContainer.style.left = '-9999px';
+            cloneContainer.style.top = '-9999px';
+            cloneContainer.style.width = '324px';
+            cloneContainer.style.height = '576px';
+            cloneContainer.style.zIndex = '-9999';
+            cloneContainer.style.overflow = 'hidden';
             
-            // Temporary hide border radius to prevent white corners in some versions of html2canvas
-            const originalBorderRadius = storyEl.style.borderRadius;
-            const originalTransform = wrapper.style.transform;
-            storyEl.style.borderRadius = '0px';
-            wrapper.style.transform = 'scale(1)';
+            const clonedEl = originalStoryEl.cloneNode(true);
+            clonedEl.style.transform = 'none';
+            clonedEl.style.borderRadius = '0px';
+            clonedEl.style.margin = '0';
+            clonedEl.classList.remove('hidden');
+
+            cloneContainer.appendChild(clonedEl);
+            document.body.appendChild(cloneContainer);
 
             try {
-                const canvas = await html2canvas(storyEl, {
-                    scale: 3, // Output will be 324*3=972 x 576*3=1728 (Perfect 9:16 IG Ratio)
-                    useCORS: true,
-                    backgroundColor: '#0a3143'
-                });
-                
-                storyEl.style.borderRadius = originalBorderRadius;
-                wrapper.style.transform = originalTransform;
-                
-                canvas.toBlob(async (blob) => {
-                    const file = new File([blob], `progress-renang-{{ Str::slug($student->nama) }}.png`, { type: 'image/png' });
-                    
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        try {
-                            await navigator.share({
-                                files: [file],
-                                title: 'Laporan Sesi Renang',
-                                text: 'Lihat progres renangku hari ini!'
+                let canvas;
+                if (window.htmlToImage) {
+                    try {
+                        canvas = await htmlToImage.toCanvas(clonedEl, {
+                            pixelRatio: 3,
+                            backgroundColor: '#07364B',
+                            cacheBust: true,
+                            fontEmbedCSS: '',
+                            skipFonts: true
+                        });
+                    } catch (h2iErr) {
+                        console.warn("htmlToImage error, falling back to html2canvas:", h2iErr);
+                    }
+                }
+
+                if (!canvas) {
+                    canvas = await html2canvas(clonedEl, {
+                        scale: 3,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#07364B',
+                        onclone: (clonedDoc) => {
+                            clonedDoc.querySelectorAll('style').forEach(style => {
+                                try {
+                                    style.innerHTML = style.innerHTML
+                                        .replace(/oklab\([^)]+\)/gi, '#07364B')
+                                        .replace(/oklch\([^)]+\)/gi, '#07364B');
+                                } catch(e){}
                             });
-                        } catch (err) {
-                            console.error(err);
-                            if (err.name !== 'AbortError') {
-                                fallbackDownload(canvas);
-                            }
                         }
-                    } else {
-                        // Fallback
-                        fallbackDownload(canvas);
+                    });
+                }
+
+                if (document.body.contains(cloneContainer)) {
+                    document.body.removeChild(cloneContainer);
+                }
+
+                if (!canvas) {
+                    throw new Error("Gagal membuat gambar.");
+                }
+
+                canvas.toBlob((blob) => {
+                    const fileName = `progress-renang-{{ Str::slug($student->nama) }}.png`;
+
+                    if (!blob) {
+                        showStoryToast("Gagal membuat data gambar.", "error");
+                        text.innerText = originalText;
+                        btn.disabled = false;
+                        return;
                     }
 
+                    fallbackDownloadBlob(blob, fileName);
                     text.innerText = originalText;
                     btn.disabled = false;
                 }, 'image/png');
 
             } catch (err) {
-                console.error(err);
+                console.error("downloadStoryImage error:", err);
+                if (document.body.contains(cloneContainer)) {
+                    document.body.removeChild(cloneContainer);
+                }
+                showStoryToast("Gagal mengunduh gambar: " + (err.message || 'Terjadi kesalahan'), "error");
                 text.innerText = originalText;
                 btn.disabled = false;
-                storyEl.style.borderRadius = originalBorderRadius;
-                wrapper.style.transform = originalTransform;
             }
         }
 
-        function fallbackDownload(canvas) {
-            const image = canvas.toDataURL("image/png");
-            const link = document.createElement('a');
-            link.download = `progress-renang-{{ Str::slug($student->nama) }}.png`;
-            link.href = image;
-            link.click();
+        const shareStory = downloadStoryImage;
+
+        function showStoryToast(message, type = 'info') {
+            let toast = document.getElementById('story-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'story-toast';
+                toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 z-[110] max-w-xs sm:max-w-sm w-[90%] bg-slate-900/95 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center space-x-2.5 transition-all duration-300 transform opacity-0 translate-y-4 pointer-events-none border border-white/10';
+                document.body.appendChild(toast);
+            }
+            const icon = type === 'success' ? '✅' : (type === 'error' ? '⚠️' : 'ℹ️');
+            toast.innerHTML = `<span class="text-base">${icon}</span><span>${message}</span>`;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+            }, 4500);
+        }
+
+        function fallbackDownloadBlob(blob, filename) {
+            try {
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+                showStoryToast("Gambar Story berhasil diunduh! Silakan buka Instagram & unggah gambar ini ke Story Anda.", "success");
+            } catch (err) {
+                console.error("Download fallback error:", err);
+                showStoryToast("Gagal mengunduh gambar story.", "error");
+            }
         }
 
         function switchTab(tabName) {
