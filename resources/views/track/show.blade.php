@@ -287,8 +287,8 @@
                 <div id="story-bg" class="absolute inset-0 bg-cover bg-center z-0 opacity-0 transition-opacity duration-300"></div>
                 <div class="absolute inset-0 bg-gradient-to-b from-[#07364B]/95 via-[#07364B]/80 to-[#07364B] z-0"></div>
 
-                <!-- Content Layer -->
-                <div class="relative z-10 flex flex-col h-full p-6 justify-between">
+                    <!-- Content Layer -->
+                <div class="relative z-10 flex flex-col h-full p-5 justify-between">
                     <div>
                         <!-- Header -->
                         <div class="flex justify-between items-start">
@@ -297,35 +297,35 @@
                                     <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="w-full h-full object-cover">
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-[14px] leading-tight text-white">Bengkel Renang</h4>
+                                    <h4 class="font-bold text-[13px] leading-tight text-white">Bengkel Renang</h4>
                                     <span class="text-[9px] text-teal-200/80 tracking-wider font-semibold uppercase">Laporan Sesi</span>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <span class="text-[9px] text-teal-200/80 tracking-widest uppercase font-semibold block">Sesi Ke-</span>
+                                <span class="text-[9px] text-teal-200/80 tracking-widest uppercase font-semibold whitespace-nowrap block">SESI KE</span>
                                 <span id="story-meeting" class="font-extrabold text-[#FDB813] text-2xl leading-none">24</span>
                             </div>
                         </div>
 
                         <!-- Score Circle -->
-                        <div class="mt-2.5 flex justify-center">
-                            <div class="relative w-24 h-24 flex items-center justify-center">
-                                <svg width="96" height="96" viewBox="0 0 96 96" class="transform -rotate-90">
+                        <div class="mt-2 flex justify-center">
+                            <div class="relative w-20 h-20 flex items-center justify-center">
+                                <svg width="80" height="80" viewBox="0 0 96 96" class="transform -rotate-90">
                                     <circle cx="48" cy="48" r="40" fill="transparent" stroke="rgba(20, 184, 166, 0.2)" stroke-width="6"/>
-                                    <circle id="story-score-ring" cx="48" cy="48" r="40" fill="transparent" stroke="#2DD4BF" stroke-width="6" stroke-dasharray="251.32" stroke-dashoffset="251.32" stroke-linecap="round" class="transition-all duration-500 drop-shadow-[0_0_8px_rgba(45,212,191,0.6)]"/>
+                                    <circle id="story-score-ring" cx="48" cy="48" r="40" fill="transparent" stroke="#2DD4BF" stroke-width="6" stroke-dasharray="251.32" stroke-dashoffset="251.32" stroke-linecap="round" class="transition-all duration-500"/>
                                 </svg>
-                                <div class="absolute inset-0 flex flex-col items-center justify-center bg-teal-900/40 rounded-full backdrop-blur-sm m-2">
-                                    <span id="story-score" class="text-4xl font-extrabold leading-none tracking-tight">90</span>
-                                    <span class="text-[9px] text-teal-200 font-bold">/ 100</span>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center rounded-full">
+                                    <span id="story-score" class="text-3xl font-extrabold leading-none tracking-tight">90</span>
+                                    <span class="text-[8.5px] text-teal-200 font-bold">/ 100</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Student Info -->
-                        <div class="text-center mt-2.5">
-                            <h2 class="text-[20px] font-extrabold tracking-tight">{{ $student->nama }}</h2>
-                            <div class="flex items-center justify-center space-x-2 mt-1">
-                                <span class="bg-white/10 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold border border-white/20 shadow-sm">
+                        <div class="text-center mt-1.5">
+                            <h2 class="text-[18px] font-extrabold tracking-tight leading-tight">{{ $student->nama }}</h2>
+                            <div class="flex items-center justify-center space-x-1.5 mt-1">
+                                <span class="bg-white/10 text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold border border-white/20">
                                     {{ ucfirst($student->level ?? 'Perenang Muda') }}
                                 </span>
                                 <span class="text-teal-200/90 text-[10px] font-semibold">{{ $usiaSiswa ?? '-' }} thn</span>
@@ -333,74 +333,73 @@
                         </div>
 
                         <!-- Date, Coach & Focus -->
-                        <div class="text-center mt-2.5 space-y-1.5">
-                            <div class="text-[10px] text-teal-100/80 font-semibold flex items-center justify-center space-x-1.5">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <div class="text-center mt-1.5 space-y-1">
+                            <div class="text-[9.5px] text-teal-100/90 font-semibold flex items-center justify-center space-x-1">
+                                <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                 <span id="story-date">30 Jun 2025</span>
                                 <span class="mx-0.5">•</span>
                                 <span>Mr. Iqbal</span>
                             </div>
-                            <div class="inline-flex items-center justify-center space-x-1.5 bg-teal-500/20 backdrop-blur-md border border-teal-500/30 rounded-full px-3 py-1 text-[10px] font-bold text-teal-50 shadow-inner">
-                                <svg class="w-3 h-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                                <span id="story-topic">Teknik pernapasan gaya bebas</span>
+                            <div class="inline-flex items-center justify-center space-x-1 bg-teal-500/20 border border-teal-500/30 rounded-full px-2.5 py-0.5 text-[9px] font-bold text-teal-50">
+                                <svg class="w-2.5 h-2.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                                <span id="story-topic" class="truncate max-w-[220px]">Teknik pernapasan gaya bebas</span>
                             </div>
                         </div>
 
                         <!-- Progress Bars -->
-                        <div class="mt-2.5 space-y-1.5">
-                            <p class="text-[9px] font-extrabold text-teal-300/80 uppercase tracking-widest text-center mb-2">Progres Gaya Renang</p>
+                        <div class="mt-2 space-y-1">
+                            <p class="text-[8.5px] font-extrabold text-teal-300/80 uppercase tracking-widest text-center mb-1">Progres Gaya Renang</p>
                             
                             <!-- Item 1 -->
-                            <div class="flex items-center justify-between text-[11px] font-bold">
-                                <span class="w-[110px] text-teal-50/90 text-right pr-3">Gaya Bebas</span>
-                                <div class="flex-1 bg-white/10 h-1.5 rounded-full overflow-hidden backdrop-blur-sm">
-                                    <div id="bar-bebas" class="bg-teal-400 h-full rounded-full shadow-[0_0_8px_rgba(45,212,191,0.8)]" style="width: 88%"></div>
+                            <div class="flex items-center space-x-2 text-[10px] font-bold">
+                                <span class="w-[95px] text-teal-50/90 text-left shrink-0 whitespace-nowrap">Gaya Bebas</span>
+                                <div class="flex-1 bg-white/10 h-2 rounded-full overflow-hidden">
+                                    <div id="bar-bebas" class="bg-teal-400 h-full rounded-full" style="width: 88%"></div>
                                 </div>
-                                <span id="val-bebas" class="w-10 text-right text-teal-400">88%</span>
+                                <span id="val-bebas" class="w-8 text-right text-teal-400 shrink-0">88%</span>
                             </div>
                             <!-- Item 2 -->
-                            <div class="flex items-center justify-between text-[11px] font-bold">
-                                <span class="w-[110px] text-teal-50/90 text-right pr-3">Gaya Punggung</span>
-                                <div class="flex-1 bg-white/10 h-1.5 rounded-full overflow-hidden backdrop-blur-sm">
-                                    <div id="bar-punggung" class="bg-blue-400 h-full rounded-full shadow-[0_0_8px_rgba(96,165,250,0.8)]" style="width: 72%"></div>
+                            <div class="flex items-center space-x-2 text-[10px] font-bold">
+                                <span class="w-[95px] text-teal-50/90 text-left shrink-0 whitespace-nowrap">Gaya Punggung</span>
+                                <div class="flex-1 bg-white/10 h-2 rounded-full overflow-hidden">
+                                    <div id="bar-punggung" class="bg-blue-400 h-full rounded-full" style="width: 72%"></div>
                                 </div>
-                                <span id="val-punggung" class="w-10 text-right text-blue-400">72%</span>
+                                <span id="val-punggung" class="w-8 text-right text-blue-400 shrink-0">72%</span>
                             </div>
                             <!-- Item 3 -->
-                            <div class="flex items-center justify-between text-[11px] font-bold">
-                                <span class="w-[110px] text-teal-50/90 text-right pr-3">Gaya Dada</span>
-                                <div class="flex-1 bg-white/10 h-1.5 rounded-full overflow-hidden backdrop-blur-sm">
-                                    <div id="bar-dada" class="bg-[#FDB813] h-full rounded-full shadow-[0_0_8px_rgba(253,184,19,0.8)]" style="width: 65%"></div>
+                            <div class="flex items-center space-x-2 text-[10px] font-bold">
+                                <span class="w-[95px] text-teal-50/90 text-left shrink-0 whitespace-nowrap">Gaya Dada</span>
+                                <div class="flex-1 bg-white/10 h-2 rounded-full overflow-hidden">
+                                    <div id="bar-dada" class="bg-[#FDB813] h-full rounded-full" style="width: 65%"></div>
                                 </div>
-                                <span id="val-dada" class="w-10 text-right text-[#FDB813]">65%</span>
+                                <span id="val-dada" class="w-8 text-right text-[#FDB813] shrink-0">65%</span>
                             </div>
                             <!-- Item 4 -->
-                            <div class="flex items-center justify-between text-[11px] font-bold">
-                                <span class="w-[110px] text-teal-50/90 text-right pr-3">Gaya Kupu-kupu</span>
-                                <div class="flex-1 bg-white/10 h-1.5 rounded-full overflow-hidden backdrop-blur-sm">
-                                    <div id="bar-kupu" class="bg-pink-400 h-full rounded-full shadow-[0_0_8px_rgba(244,114,182,0.8)]" style="width: 55%"></div>
+                            <div class="flex items-center space-x-2 text-[10px] font-bold">
+                                <span class="w-[95px] text-teal-50/90 text-left shrink-0 whitespace-nowrap">Gaya Kupu-kupu</span>
+                                <div class="flex-1 bg-white/10 h-2 rounded-full overflow-hidden">
+                                    <div id="bar-kupu" class="bg-pink-400 h-full rounded-full" style="width: 55%"></div>
                                 </div>
-                                <span id="val-kupu" class="w-10 text-right text-pink-400">55%</span>
+                                <span id="val-kupu" class="w-8 text-right text-pink-400 shrink-0">55%</span>
                             </div>
                         </div>
 
                         <!-- Quote -->
-                        <div class="mt-2 bg-white/10 backdrop-blur-md border border-white/10 p-3 rounded-xl relative overflow-hidden shrink-0">
-                            <div class="absolute -top-3 -left-1 text-6xl text-white/10 font-serif">"</div>
-                            <p id="story-quote" class="text-[11px] font-semibold text-teal-50 italic relative z-10 leading-snug text-center">
+                        <div class="mt-2 bg-white/10 border border-white/10 px-3 py-2 rounded-xl relative overflow-hidden shrink-0">
+                            <p id="story-quote" class="text-[10px] font-semibold text-teal-50 italic relative z-10 leading-snug text-center">
                                 "Sangat baik! Pernapasan sudah ritmis dan konsisten."
                             </p>
-                            <p class="text-[9px] text-teal-200/80 mt-1.5 font-medium text-center">— Mr. Iqbal</p>
+                            <p class="text-[8.5px] text-teal-200/80 mt-1 font-medium text-center">— Mr. Iqbal</p>
                         </div>
                     </div>
 
                     <!-- Footer -->
-                    <div class="flex justify-between items-center text-[9px] text-teal-200/60 font-medium pt-3 mt-3 border-t border-white/10">
+                    <div class="flex justify-between items-center text-[9px] text-teal-200/60 font-medium pt-2 mt-2 border-t border-white/10">
                         <div class="flex items-center space-x-1.5">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                             <span>@bengkelrenang</span>
                         </div>
-                        <span>bengkelrenang.id</span>
+                        <span>bengkelrenang.my.id</span>
                     </div>
                 </div>
             </div>
@@ -413,64 +412,63 @@
                 <div class="absolute bottom-0 inset-x-0 h-[60%] bg-gradient-to-t from-[#07364B] via-[#07364B]/80 to-transparent z-0"></div>
 
                 <!-- Content Layer -->
-                <div class="relative z-10 flex flex-col h-full p-6 justify-between">
+                <div class="relative z-10 flex flex-col h-full p-5 justify-between">
                     <!-- Header Top-Left -->
                     <div class="flex items-center space-x-2">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-[#FDB813] bg-[#FDB813] shrink-0">
+                        <div class="w-9 h-9 rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-[#FDB813] bg-[#FDB813] shrink-0">
                             <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="w-full h-full object-cover">
                         </div>
-                        <h4 class="font-extrabold text-[15px] leading-tight text-white drop-shadow-md">Bengkel Renang</h4>
+                        <h4 class="font-extrabold text-[14px] leading-tight text-white drop-shadow-md">Bengkel Renang</h4>
                     </div>
 
                     <!-- Main Content (Bottom area) -->
-                    <div class="mt-auto space-y-4">
+                    <div class="mt-auto space-y-3">
                         <!-- Score and Session -->
                         <div class="flex justify-between items-end">
                             <!-- Left: Score -->
                             <div>
-                                <span class="text-[10px] text-white/90 font-bold uppercase tracking-widest block mb-0.5 drop-shadow-md">NILAI SESI</span>
+                                <span class="text-[9.5px] text-white/90 font-bold uppercase tracking-widest block mb-0.5 drop-shadow-md">NILAI SESI</span>
                                 <div class="flex items-baseline space-x-1">
-                                    <span id="story-score-2" class="text-7xl font-black leading-none drop-shadow-lg">90</span>
-                                    <span class="text-xl font-bold text-white/80">/100</span>
+                                    <span id="story-score-2" class="text-6xl font-black leading-none drop-shadow-lg">90</span>
+                                    <span class="text-lg font-bold text-white/80">/100</span>
                                 </div>
                                 <div class="mt-1 flex items-center space-x-1.5 text-teal-300 font-bold drop-shadow-md">
-                                    <span id="story-praise-2" class="text-sm">Luar Biasa!</span>
-                                    <span id="story-stars-2">⭐⭐⭐⭐⭐</span>
+                                    <span id="story-praise-2" class="text-xs">Luar Biasa!</span>
+                                    <span id="story-stars-2" class="text-xs">⭐⭐⭐⭐⭐</span>
                                 </div>
                             </div>
                             <!-- Right: Session -->
                             <div class="text-right">
-                                <span class="text-[9px] text-white/80 tracking-widest uppercase font-bold block drop-shadow-md">SESI KE-</span>
-                                <span id="story-meeting-2" class="font-extrabold text-[#FDB813] text-4xl leading-none drop-shadow-lg">24</span>
+                                <span class="text-[9px] text-white/80 tracking-widest uppercase font-bold whitespace-nowrap block drop-shadow-md">SESI KE</span>
+                                <span id="story-meeting-2" class="font-extrabold text-[#FDB813] text-3xl leading-none drop-shadow-lg">24</span>
                             </div>
                         </div>
 
                         <!-- Name and Student Info -->
                         <div>
-                            <h2 class="text-[26px] font-black tracking-tight drop-shadow-lg">{{ $student->nama }}</h2>
-                            <div class="flex items-center space-x-2 mt-2">
-                                <span class="bg-black/40 backdrop-blur-md text-white px-3 py-1 rounded-full text-[11px] font-bold border border-white/20 shadow-sm">
+                            <h2 class="text-[22px] font-black tracking-tight drop-shadow-lg leading-tight">{{ $student->nama }}</h2>
+                            <div class="flex items-center space-x-2 mt-1.5">
+                                <span class="bg-black/40 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold border border-white/20 shadow-sm">
                                     {{ ucfirst($student->level ?? 'Perenang Muda') }}
                                 </span>
-                                <div class="text-[11px] text-white/90 font-semibold flex items-center space-x-1.5 drop-shadow-md">
-                                    <svg class="w-3.5 h-3.5 text-teal-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <div class="text-[10px] text-white/90 font-semibold flex items-center space-x-1 drop-shadow-md">
+                                    <svg class="w-3 h-3 text-teal-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     <span id="story-date-2">30 Jun 2025</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Quote -->
-                        <div class="bg-[#07364B]/60 backdrop-blur-md border border-white/10 p-4 rounded-2xl relative overflow-hidden">
-                            <div class="absolute -top-3 -left-1 text-7xl text-white/10 font-serif">"</div>
-                            <p id="story-quote-2" class="text-[13px] font-medium text-white/95 italic leading-relaxed relative z-10">
+                        <div class="bg-[#07364B]/80 border border-white/10 p-3 rounded-xl relative overflow-hidden">
+                            <p id="story-quote-2" class="text-[11px] font-medium text-white/95 italic leading-relaxed relative z-10">
                                 "Sangat baik! Pernapasan sudah ritmis dan konsisten."
                             </p>
-                            <p class="text-[10px] text-teal-200 mt-2.5 font-medium">— Mr. Iqbal</p>
+                            <p class="text-[9px] text-teal-200 mt-1.5 font-medium">— Mr. Iqbal</p>
                         </div>
                     </div>
 
                     <!-- Footer -->
-                    <div class="flex justify-between items-center text-[9px] text-white/60 font-medium pt-3 mt-4 border-t border-white/10">
+                    <div class="flex justify-between items-center text-[9px] text-white/60 font-medium pt-2 mt-3 border-t border-white/10">
                         <div class="flex items-center space-x-1.5">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                             <span>@bengkelrenang</span>
