@@ -40,7 +40,7 @@
 
             <!-- Kanan: Tombol WhatsApp (Ukurannya Proporsional, Tidak Melar) -->
             <div class="flex items-center shrink-0">
-                <a href="https://wa.me/089526772978" target="_blank" class="bg-[#FDB813] hover:bg-[#e0a20b] text-[#032B53] font-extrabold px-5 py-2.5 rounded-full text-xs flex items-center space-x-2 shadow-md transition duration-200 transform hover:scale-105">
+                <a href="https://wa.me/6289526772978" target="_blank" class="bg-[#FDB813] hover:bg-[#e0a20b] text-[#032B53] font-extrabold px-5 py-2.5 rounded-full text-xs flex items-center space-x-2 shadow-md transition duration-200 transform hover:scale-105">
                     <!-- Ikon WhatsApp -->
                     <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.948 0c3.179.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.239 3.482 8.42-.003 6.55-5.339 11.896-11.893 11.896-2.007-.001-3.982-.51-5.735-1.486L0 24zm6.59-4.846c1.666.988 3.311 1.485 5.308 1.486 5.589 0 10.134-4.52 10.137-10.074.001-2.692-1.047-5.222-2.951-7.127C17.237 2.533 14.711 1.48 12.003 1.48c-5.594 0-10.142 4.519-10.145 10.075a9.9 9.9 0 0 0 1.523 5.251l-.973 3.55 3.64-.954zm10.512-7.23c-.279-.14-1.651-.814-1.906-.907-.256-.094-.442-.14-.628.14-.186.279-.717.907-.88 1.093-.163.186-.326.21-.605.07-1.127-.563-1.941-.973-2.695-2.262-.196-.336.196-.312.56-.1.326-.175.442-.21.605-.489.163-.279.081-.523-.041-.663-.122-.14-1.025-2.47-1.404-3.38-.37-.889-.744-.768-.1025-.772h-.88c-.279 0-.733.105-1.117.523-.384.419-1.466 1.433-1.466 3.493 0 2.06 1.5 4.048 1.71 4.328.209.279 2.953 4.51 7.154 6.326 2.457 1.063 3.393 1.157 4.606.977 1.137-.17 2.47-.1 3.238-.928.767-.828.767-1.542.535-1.682-.232-.14-.814-.407-1.093-.547z"/>
@@ -269,7 +269,7 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="https://wa.me/089526772978" class="bg-blue-950 hover:bg-blue-900 text-white font-bold text-center py-3 rounded-xl text-xs mt-8 block border border-blue-800 transition">Hubungi WA</a>
+                    <a href="https://wa.me/6289526772978" class="bg-blue-950 hover:bg-blue-900 text-white font-bold text-center py-3 rounded-xl text-xs mt-8 block border border-blue-800 transition">Hubungi WA</a>
                 </div>
 
                 <div class="bg-[#FDB813] p-8 rounded-3xl flex flex-col justify-between shadow-xl relative scale-100 lg:scale-105 z-10">
@@ -293,7 +293,7 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="https://wa.me/089526772978" class="bg-[#032B53] hover:bg-blue-900 text-white font-bold text-center py-3 rounded-xl text-xs mt-8 block shadow-md transition">Book Now</a>
+                    <a href="https://wa.me/6289526772978" class="bg-[#032B53] hover:bg-blue-900 text-white font-bold text-center py-3 rounded-xl text-xs mt-8 block shadow-md transition">Book Now</a>
                 </div>
 
                 <div class="bg-slate-900/40 text-white p-8 rounded-3xl border border-blue-900 flex flex-col justify-between shadow-lg">
@@ -312,7 +312,7 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="https://wa.me/089526772978" class="bg-blue-950 hover:bg-blue-900 text-white font-bold text-center py-3 rounded-xl text-xs mt-8 block border border-blue-800 transition">Ambil Kesempatan 1x Trial</a>
+                    <a href="https://wa.me/6289526772978" class="bg-blue-950 hover:bg-blue-900 text-white font-bold text-center py-3 rounded-xl text-xs mt-8 block border border-blue-800 transition">Ambil Kesempatan 1x Trial</a>
                 </div>
             </div>
         </div>
@@ -353,7 +353,7 @@
         <div class="max-w-4xl mx-auto px-6 space-y-6">
             <h2 class="text-3xl sm:text-4xl font-extrabold">Ready to Make a Splash?</h2>
             <p class="text-slate-300 max-w-md mx-auto text-sm">Konsultasikan kemampuan renang awal anak Anda kepada Mr Iqbal secara gratis.</p>
-            <a href="https://wa.me/089526772978" target="_blank" class="inline-flex bg-[#FDB813] hover:bg-[#e0a20b] text-[#032B53] font-bold px-8 py-3.5 rounded-xl text-sm space-x-2 shadow-xl transition">
+            <a href="https://wa.me/6289526772978" target="_blank" class="inline-flex bg-[#FDB813] hover:bg-[#e0a20b] text-[#032B53] font-bold px-8 py-3.5 rounded-xl text-sm space-x-2 shadow-xl transition">
                 <span>Start Today — Message Us</span>
             </a>
         </div>
@@ -393,7 +393,7 @@
                 </a>
 
                 <!-- 3. WhatsApp Logo -->
-                <a href="https://wa.me/089526772978" target="_blank" class="text-slate-400 hover:text-[#FDB813] transition duration-200 transform hover:scale-110" title="Hubungi WhatsApp">
+                <a href="https://wa.me/6289526772978" target="_blank" class="text-slate-400 hover:text-[#FDB813] transition duration-200 transform hover:scale-110" title="Hubungi WhatsApp">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12.004 22c-2.007-.001-3.982-.51-5.735-1.486L0 24l1.687-6.163C.646 16.033.1 13.988.101 11.891 1.01 5.348 5.347 0 11.898 0c3.179.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.239 3.482 8.42-.003 6.55-5.339 11.896-11.893 11.896zm6.59-4.846c1.666.988 3.311 1.485 5.308 1.486 5.589 0 10.134-4.52 10.137-10.074.001-2.692-1.047-5.222-2.951-7.127C17.237 2.533 14.711 1.48 12.003 1.48c-5.594 0-10.142 4.519-10.145 10.075a9.9 9.9 0 0 0 1.523 5.251l-.973 3.55 3.64-.954zm10.512-7.23c-.279-.14-1.651-.814-1.906-.907-.256-.094-.442-.14-.628.14-.186.279-.717.907-.88 1.093-.163.186-.326.21-.605.07-1.127-.563-1.941-.973-2.695-2.262-.196-.336.196-.312.56-.1.326-.175.442-.21.605-.489.163-.279.081-.523-.041-.663-.122-.14-1.025-2.47-1.404-3.38-.37-.889-.744-.768-.1025-.772h-.88c-.279 0-.733.105-1.117.523-.384.419-1.466 1.433-1.466 3.493 0 2.06 1.5 4.048 1.71 4.328.209.279 2.953 4.51 7.154 6.326 2.457 1.063 3.393 1.157 4.606.977 1.137-.17 2.47-.1 3.238-.928.767-.828.767-1.542.535-1.682-.232-.14-.814-.407-1.093-.547z"/>
                     </svg>
