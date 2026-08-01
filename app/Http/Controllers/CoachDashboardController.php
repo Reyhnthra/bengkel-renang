@@ -223,11 +223,18 @@ class CoachDashboardController extends Controller
             // Riwayat sesi (Urutkan dari yang terbaru)
             'sessions'      => $student->sessions->sortByDesc('id')->map(function($session) {
                 return [
-                    'meeting_number' => $session->meeting_number ?? '-',
-                    'tanggal'        => \Carbon\Carbon::parse($session->tanggal)->format('d M Y'),
-                    'topik'          => $session->topik_sesi ?? 'Latihan Umum',
-                    'nilai'          => $session->nilai_sesi ?? 0,
-                    'catatan'        => $session->progressReport ? $session->progressReport->catatan : '-',
+                    'id'                => $session->id,
+                    'meeting_number'    => $session->meeting_number ?? '-',
+                    'tanggal'           => \Carbon\Carbon::parse($session->tanggal)->format('d M Y'),
+                    'tanggal_raw'       => $session->tanggal,
+                    'attendance_status' => $session->attendance_status,
+                    'topik'             => $session->topik_sesi ?? 'Latihan Umum',
+                    'nilai'             => $session->nilai_sesi ?? 0,
+                    'catatan'           => $session->progressReport ? $session->progressReport->catatan : '-',
+                    'gaya_bebas'        => $session->progressReport ? $session->progressReport->gaya_bebas : 0,
+                    'gaya_punggung'     => $session->progressReport ? $session->progressReport->gaya_punggung : 0,
+                    'gaya_dada'         => $session->progressReport ? $session->progressReport->gaya_dada : 0,
+                    'gaya_kupu'         => $session->progressReport ? $session->progressReport->gaya_kupu : 0,
                 ];
             })->values()
         ]);
@@ -271,5 +278,71 @@ class CoachDashboardController extends Controller
         $student->delete();
 
         return redirect()->back()->with('success', 'Data siswa ' . $nama . ' berhasil dihapus!');
+    }
+
+    // 8. PROSES EDIT / UPDATE RIWAYAT SESI
+    public function updateSession(Request $request, $id)
+    {
+        $session = Session::findOrFail($id);
+
+        $request->validate([
+            'tanggal'           => 'required|date',
+            'attendance_status' => 'required|in:hadir,tidak hadir',
+            'topik_sesi'        => 'nullable|string|max:255',
+            'nilai_sesi'        => 'required|integer|min:0|max:100',
+            'gaya_bebas'        => 'nullable|integer|min:0|max:100',
+            'gaya_punggung'     => 'nullable|integer|min:0|max:100',
+            'gaya_dada'         => 'nullable|integer|min:0|max:100',
+            'gaya_kupu'         => 'nullable|integer|min:0|max:100',
+            'catatan'           => 'nullable|string'
+        ]);
+
+        $session->update([
+            'tanggal'           => $request->tanggal,
+            'attendance_status' => $request->attendance_status,
+            'topik_sesi'        => $request->topik_sesi,
+            'nilai_sesi'        => $request->nilai_sesi,
+        ]);
+
+        if ($request->attendance_status === 'hadir') {
+            ProgressReport::updateOrCreate(
+                ['id_sesi' => $session->id],
+                [
+                    'gaya_bebas'    => $request->gaya_bebas ?? 0,
+                    'gaya_punggung' => $request->gaya_punggung ?? 0,
+                    'gaya_dada'     => $request->gaya_dada ?? 0,
+                    'gaya_kupu'     => $request->gaya_kupu ?? 0,
+                    'catatan'       => $request->catatan
+                ]
+            );
+        } else {
+            if ($session->progressReport) {
+                $session->progressReport->delete();
+            }
+        }
+
+        return redirect()->back()->with('success', 'Data riwayat sesi pertemuan #' . ($session->meeting_number ?? '') . ' berhasil diperbarui!');
+    }
+
+    // 9. PROSES HAPUS RIWAYAT SESI
+    public function destroySession($id)
+    {
+        $session = Session::findOrFail($id);
+        $studentId = $session->id_siswa;
+        $meetingNumber = $session->meeting_number;
+        
+        $session->delete();
+
+        // Recalculate meeting numbers for remaining sessions of this student ordered chronologically/by id
+        $remainingSessions = Session::where('id_siswa', $studentId)
+            ->orderBy('tanggal', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        foreach ($remainingSessions as $index => $s) {
+            $s->update(['meeting_number' => $index + 1]);
+        }
+
+        return redirect()->back()->with('success', 'Data riwayat sesi pertemuan #' . $meetingNumber . ' berhasil dihapus!');
     }
 }

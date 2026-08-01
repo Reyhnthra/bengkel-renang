@@ -51,6 +51,8 @@ Route::middleware(['coach.auth'])->group(function () {
     // Halaman Jurnal Absensi + Input Slider Nilai Gaya Renang harian
     Route::get('/coach/attendance', [CoachDashboardController::class, 'attendance'])->name('coach.attendance');
     Route::post('/coach/attendance/store', [CoachDashboardController::class, 'storeSession'])->name('coach.attendance.store');
+    Route::put('/coach/sessions/{id}', [CoachDashboardController::class, 'updateSession'])->name('coach.sessions.update');
+    Route::delete('/coach/sessions/{id}', [CoachDashboardController::class, 'destroySession'])->name('coach.sessions.destroy');
     Route::get('/coach/student-data/{id}', [CoachDashboardController::class, 'getStudentData'])->name('coach.student.data');
     
     

@@ -482,6 +482,150 @@
         </form>
     </div>
 </div>
+
+<!-- ==================== BOX DIALOG MODAL EDIT SESI ==================== -->
+<div id="editSessionModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[32px] w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh] p-6 sm:p-8 border border-slate-100 relative">
+        <button onclick="closeEditSessionModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 font-bold text-sm cursor-pointer focus:outline-none">✕</button>
+        
+        <div class="flex items-center space-x-3 mb-6">
+            <div class="w-12 h-12 bg-amber-500 text-white font-extrabold rounded-2xl flex items-center justify-center text-lg shadow-sm">
+                ✏️
+            </div>
+            <div>
+                <h3 class="font-extrabold text-base text-slate-900">Edit Riwayat Sesi</h3>
+                <span class="text-[10px] text-amber-600 font-bold uppercase tracking-wider block" id="edit_session_title">Pertemuan #1</span>
+            </div>
+        </div>
+
+        <form id="editSessionForm" method="POST" class="space-y-5 text-xs font-bold text-slate-500 uppercase tracking-wider">
+            @csrf
+            @method('PUT')
+
+            <div class="grid grid-cols-2 gap-3">
+                <button type="button" id="btn-edit-hadir" onclick="setEditStatus('hadir')" 
+                    class="py-3 rounded-xl border-2 text-center transition font-black bg-[#032B53] border-[#032B53] text-white shadow-sm cursor-pointer">
+                    ✓ Hadir
+                </button>
+                <button type="button" id="btn-edit-tidak-hadir" onclick="setEditStatus('tidak hadir')" 
+                    class="py-3 rounded-xl border-2 text-center transition font-black border-slate-200 text-slate-400 hover:bg-slate-50 cursor-pointer">
+                    ✕ Tidak Hadir
+                </button>
+            </div>
+            <input type="hidden" name="attendance_status" id="edit_attendance_status" value="hadir">
+
+            <div class="space-y-1.5">
+                <label class="text-slate-600 font-extrabold">Tanggal Sesi</label>
+                <input type="date" name="tanggal" id="edit_sess_tanggal" class="w-full bg-[#E6F0FA] text-slate-800 rounded-xl px-4 py-3.5 focus:outline-none font-bold" required>
+            </div>
+
+            <div id="edit-form-scoring-section" class="space-y-5">
+                <div class="space-y-1.5">
+                    <label class="text-slate-600 font-extrabold">Topik Sesi</label>
+                    <input type="text" name="topik_sesi" id="edit_sess_topik" placeholder="Contoh: Latihan gaya bebas, kick dasar..." class="w-full bg-[#E6F0FA] text-slate-800 rounded-xl px-4 py-3.5 focus:outline-none font-bold">
+                </div>
+
+                <div class="space-y-1.5 bg-slate-50/80 p-4 rounded-2xl border border-slate-100">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-slate-600 font-extrabold">Nilai Sesi Keseluruhan</label>
+                        <span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-md text-xs font-black"><span id="val-display-edit-sesi">0</span> /100</span>
+                    </div>
+                    <input type="range" name="nilai_sesi" id="edit_sess_nilai" min="0" max="100" value="0" oninput="updateEditVal('sesi', this.value)" class="w-full accent-teal-500 cursor-grab active:cursor-grabbing">
+                    <div class="flex justify-between text-[9px] text-slate-400 font-bold pt-1"><span>Perlu Latihan</span><span>Cukup</span><span>Sangat Baik</span></div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-slate-600 font-extrabold">Catatan Pelatih</label>
+                    <textarea name="catatan" id="edit_sess_catatan" rows="3" placeholder="Tulis perkembangan, saran, atau pujian..." class="w-full bg-[#E6F0FA] text-slate-800 rounded-xl p-4 focus:outline-none font-bold leading-relaxed"></textarea>
+                </div>
+
+                <div class="border-t border-slate-100 pt-4 space-y-4">
+                    <span class="text-[10px] text-center block text-slate-400 tracking-widest my-2">PENGUASAAN GAYA RENANG</span>
+                    
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center text-slate-700 font-extrabold">
+                            <span>⚪ Gaya Bebas</span>
+                            <span class="text-teal-600" id="val-display-edit-bebas">0%</span>
+                        </div>
+                        <input type="range" name="gaya_bebas" id="edit_slider_bebas" min="0" max="100" value="0" 
+                            oninput="updateEditVal('bebas', this.value)" 
+                            class="w-full accent-teal-500 cursor-grab active:cursor-grabbing">
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center text-slate-700 font-extrabold">
+                            <span>⚪ Gaya Punggung</span>
+                            <span class="text-blue-600" id="val-display-edit-punggung">0%</span>
+                        </div>
+                        <input type="range" name="gaya_punggung" id="edit_slider_punggung" min="0" max="100" value="0" 
+                            oninput="updateEditVal('punggung', this.value)" 
+                            class="w-full accent-blue-500 cursor-grab active:cursor-grabbing">
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center text-slate-700 font-extrabold">
+                            <span>⚪ Gaya Dada</span>
+                            <span class="text-amber-600" id="val-display-edit-dada">0%</span>
+                        </div>
+                        <input type="range" name="gaya_dada" id="edit_slider_dada" min="0" max="100" value="0" 
+                            oninput="updateEditVal('dada', this.value)" 
+                            class="w-full accent-amber-500 cursor-grab active:cursor-grabbing">
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center text-slate-700 font-extrabold">
+                            <span>⚪ Gaya Kupu</span>
+                            <span class="text-pink-600" id="val-display-edit-kupu">0%</span>
+                        </div>
+                        <input type="range" name="gaya_kupu" id="edit_slider_kupu" min="0" max="100" value="0" 
+                            oninput="updateEditVal('kupu', this.value)" 
+                            class="w-full accent-pink-500 cursor-grab active:cursor-grabbing">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex space-x-3 mt-6">
+                <button type="button" onclick="closeEditSessionModal()" class="w-1/3 bg-slate-100 text-slate-600 font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider hover:bg-slate-200 transition cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" class="w-2/3 bg-amber-500 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-md hover:bg-amber-600 transition cursor-pointer">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ==================== BOX DIALOG MODAL HAPUS SESI ==================== -->
+<div id="deleteSessionModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[32px] w-full max-w-md shadow-2xl overflow-hidden p-6 sm:p-8 relative border border-slate-100 text-center space-y-4">
+        <button onclick="closeDeleteSessionModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 font-bold text-sm cursor-pointer focus:outline-none">✕</button>
+        
+        <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-sm">
+            🗑️
+        </div>
+        
+        <div>
+            <h3 class="text-lg font-extrabold text-slate-900">Hapus Riwayat Sesi?</h3>
+            <p class="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+                Apakah Anda yakin ingin menghapus data <strong id="delete_session_info" class="text-slate-800"></strong>? Data nilai dan catatan pada sesi ini akan terhapus secara permanen.
+            </p>
+        </div>
+
+        <form id="deleteSessionForm" method="POST" class="pt-2">
+            @csrf
+            @method('DELETE')
+            <div class="flex space-x-3">
+                <button type="button" onclick="closeDeleteSessionModal()" class="w-1/2 bg-slate-100 text-slate-600 font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider hover:bg-slate-200 transition cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" class="w-1/2 bg-red-600 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-md hover:bg-red-700 transition cursor-pointer">
+                    Ya, Hapus
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -589,6 +733,7 @@
             document.getElementById('ring-kupu').style.strokeDashoffset = 100.5 - (kupu * 100.5 / 100);
 
             // 5. Render Riwayat Sesi
+            window.currentStudentSessions = data.sessions || [];
             const riwayatList = document.getElementById('riwayat-list-container');
             riwayatList.innerHTML = '';
             
@@ -597,15 +742,36 @@
                     const nilai = parseInt(sess.nilai) || 0;
                     const isExcellent = nilai >= 85;
                     const badgeClr = isExcellent ? "text-emerald-600 bg-emerald-50 border-emerald-100" : "text-amber-600 bg-amber-50 border-amber-100";
+                    const isHadir = sess.attendance_status === 'hadir';
+                    const statusBadgeClr = isHadir ? "text-emerald-600 bg-emerald-50 border-emerald-100" : "text-red-600 bg-red-50 border-red-100";
+                    const statusTxt = isHadir ? "Hadir" : "Tidak Hadir";
                     
                     riwayatList.innerHTML += `
                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3 text-left">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <div class="text-[10px] font-bold text-slate-400 uppercase">PERTEMUAN #${sess.meeting_number || '1'}</div>
-                                    <h4 class="font-extrabold text-sm text-[#032B53]">${sess.topik || 'Latihan'}</h4>
+                                    <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+                                        <span class="text-[10px] font-bold text-slate-400 uppercase">PERTEMUAN #${sess.meeting_number || '1'}</span>
+                                        <span class="text-[10px] font-extrabold text-slate-400">• ${sess.tanggal || ''}</span>
+                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${statusBadgeClr} border">${statusTxt}</span>
+                                    </div>
+                                    <h4 class="font-extrabold text-sm text-[#032B53] mt-1">${sess.topik || 'Latihan'}</h4>
                                 </div>
-                                <div class="px-3 py-1 rounded-full text-xs font-black ${badgeClr} border">${nilai}/100</div>
+                                <div class="flex items-center space-x-2">
+                                    <div class="px-3 py-1 rounded-full text-xs font-black ${badgeClr} border">${nilai}/100</div>
+                                    <div class="flex items-center space-x-1">
+                                        <button type="button" onclick="openEditSessionModal(${sess.id})" class="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition cursor-pointer" title="Edit Sesi">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
+                                        </button>
+                                        <button type="button" onclick="openDeleteSessionModal(${sess.id}, '${sess.meeting_number}', '${sess.tanggal}')" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer" title="Hapus Sesi">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="text-xs text-slate-500 italic">"${sess.catatan || '-'}"</div>
                         </div>
@@ -661,5 +827,76 @@
     }
     
     function closeDetailModal() { document.getElementById('detailModal').classList.add('hidden'); }
+
+    // Logika Modal Edit Sesi
+    function openEditSessionModal(sessionId) {
+        const sess = (window.currentStudentSessions || []).find(s => s.id === sessionId);
+        if (!sess) return;
+
+        document.getElementById('editSessionForm').action = `/coach/sessions/${sess.id}`;
+        document.getElementById('edit_session_title').innerText = `Pertemuan #${sess.meeting_number || '1'}`;
+        document.getElementById('edit_sess_tanggal').value = sess.tanggal_raw || '';
+        document.getElementById('edit_sess_topik').value = (sess.topik === 'Latihan Umum') ? '' : (sess.topik || '');
+        document.getElementById('edit_sess_nilai').value = sess.nilai || 0;
+        document.getElementById('val-display-edit-sesi').innerText = sess.nilai || 0;
+        document.getElementById('edit_sess_catatan').value = (sess.catatan === '-') ? '' : (sess.catatan || '');
+
+        const bebas = sess.gaya_bebas || 0;
+        const punggung = sess.gaya_punggung || 0;
+        const dada = sess.gaya_dada || 0;
+        const kupu = sess.gaya_kupu || 0;
+
+        document.getElementById('edit_slider_bebas').value = bebas;
+        document.getElementById('val-display-edit-bebas').innerText = bebas + "%";
+        document.getElementById('edit_slider_punggung').value = punggung;
+        document.getElementById('val-display-edit-punggung').innerText = punggung + "%";
+        document.getElementById('edit_slider_dada').value = dada;
+        document.getElementById('val-display-edit-dada').innerText = dada + "%";
+        document.getElementById('edit_slider_kupu').value = kupu;
+        document.getElementById('val-display-edit-kupu').innerText = kupu + "%";
+
+        setEditStatus(sess.attendance_status || 'hadir');
+
+        document.getElementById('editSessionModal').classList.remove('hidden');
+    }
+
+    function closeEditSessionModal() {
+        document.getElementById('editSessionModal').classList.add('hidden');
+    }
+
+    function setEditStatus(status) {
+        document.getElementById('edit_attendance_status').value = status;
+        const btnHadir = document.getElementById('btn-edit-hadir');
+        const btnAbsen = document.getElementById('btn-edit-tidak-hadir');
+        const scoringSection = document.getElementById('edit-form-scoring-section');
+
+        if (status === 'hadir') {
+            btnHadir.className = "py-3 rounded-xl border-2 text-center font-black bg-[#032B53] border-[#032B53] text-white shadow-sm cursor-pointer";
+            btnAbsen.className = "py-3 rounded-xl border-2 text-center font-black border-slate-200 text-slate-400 hover:bg-slate-50 cursor-pointer";
+            scoringSection.classList.remove('hidden');
+        } else {
+            btnAbsen.className = "py-3 rounded-xl border-2 text-center font-black bg-red-500 border-red-500 text-white shadow-sm cursor-pointer";
+            btnHadir.className = "py-3 rounded-xl border-2 text-center font-black border-slate-200 text-slate-400 hover:bg-slate-50 cursor-pointer";
+            scoringSection.classList.add('hidden');
+        }
+    }
+
+    function updateEditVal(type, val) {
+        const el = document.getElementById(`val-display-edit-${type}`);
+        if (el) {
+            el.innerText = val + (type === 'sesi' ? '' : '%');
+        }
+    }
+
+    // Logika Modal Hapus Sesi
+    function openDeleteSessionModal(sessionId, meetingNumber, dateStr) {
+        document.getElementById('deleteSessionForm').action = `/coach/sessions/${sessionId}`;
+        document.getElementById('delete_session_info').innerText = `Pertemuan #${meetingNumber} (${dateStr})`;
+        document.getElementById('deleteSessionModal').classList.remove('hidden');
+    }
+
+    function closeDeleteSessionModal() {
+        document.getElementById('deleteSessionModal').classList.add('hidden');
+    }
 </script>
 @endsection
