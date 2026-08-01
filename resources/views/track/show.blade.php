@@ -701,6 +701,39 @@
             document.body.appendChild(cloneContainer);
 
             try {
+                // Ensure all fonts, images, and background photos are 100% loaded & decoded before snapshotting
+                if (document.fonts && document.fonts.ready) {
+                    try { await document.fonts.ready; } catch(e){}
+                }
+
+                const imgEls = Array.from(clonedEl.querySelectorAll('img'));
+                await Promise.all(imgEls.map(img => {
+                    if (img.complete && img.naturalWidth !== 0) {
+                        if (img.decode) return img.decode().catch(() => {});
+                        return Promise.resolve();
+                    }
+                    return new Promise(resolve => {
+                        img.onload = resolve;
+                        img.onerror = resolve;
+                    });
+                }));
+
+                const bgDivs = clonedEl.querySelectorAll('[style*="background-image"]');
+                await Promise.all(Array.from(bgDivs).map(div => {
+                    const urlMatch = div.style.backgroundImage.match(/url\(['"]?(.*?)['"]?\)/);
+                    if (urlMatch && urlMatch[1]) {
+                        return new Promise(resolve => {
+                            const tempImg = new Image();
+                            tempImg.onload = resolve;
+                            tempImg.onerror = resolve;
+                            tempImg.src = urlMatch[1];
+                        });
+                    }
+                    return Promise.resolve();
+                }));
+
+                await new Promise(r => setTimeout(r, 100));
+
                 let canvas;
                 // Prioritize html2canvas on mobile devices for reliable inline styles and Base64 image rendering
                 if (window.html2canvas) {
