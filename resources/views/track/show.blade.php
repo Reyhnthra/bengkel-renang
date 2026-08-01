@@ -727,14 +727,17 @@
                             tempImg.src = urlMatch[1];
                         });
                     }
-                await new Promise(r => setTimeout(r, 50));
+                    return Promise.resolve();
+                }));
+
+                await new Promise(r => setTimeout(r, 100));
 
                 let canvas;
                 // Prioritize html2canvas on mobile devices for reliable inline styles and Base64 image rendering
                 if (window.html2canvas) {
                     try {
                         canvas = await html2canvas(clonedEl, {
-                            scale: 2,
+                            scale: 3,
                             useCORS: true,
                             allowTaint: true,
                             backgroundColor: '#07364B',
@@ -789,7 +792,7 @@
 
                 if (!canvas && window.htmlToImage) {
                     canvas = await htmlToImage.toCanvas(clonedEl, {
-                        pixelRatio: 2,
+                        pixelRatio: 3,
                         backgroundColor: '#07364B',
                         cacheBust: true,
                         fontEmbedCSS: '',
@@ -853,45 +856,17 @@
             }, 4500);
         }
 
-        async function fallbackDownloadBlob(blob, filename) {
+        function fallbackDownloadBlob(blob, filename) {
             try {
-                const file = new File([blob], filename, { type: 'image/png' });
-                
-                // Prioritaskan Web Share API (Sangat optimal untuk iPhone Safari / Chrome iOS)
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            files: [file],
-                            title: 'Progress Les Renang',
-                            text: 'Progress Renang {{ $student->nama }} - Bengkel Renang'
-                        });
-                        showStoryToast("Gambar berhasil disimpan / dibagikan!", "success");
-                        return;
-                    } catch (shareErr) {
-                        if (shareErr.name === 'AbortError') {
-                            return; // User membatalkan dialog share
-                        }
-                    }
-                }
-
                 const blobUrl = URL.createObjectURL(blob);
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-                if (isIOS) {
-                    const newWin = window.open(blobUrl, '_blank');
-                    if (!newWin) {
-                        window.location.href = blobUrl;
-                    }
-                    showStoryToast("Tekan lama gambar lalu pilih 'Simpan ke Foto'", "info");
-                } else {
-                    const link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.download = filename;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
-                    showStoryToast("Gambar Story berhasil diunduh!", "success");
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+                showStoryToast("Gambar Story berhasil diunduh!", "success");
             } catch (err) {
                 console.error("Download fallback error:", err);
                 showStoryToast("Gagal mengunduh gambar story.", "error");
