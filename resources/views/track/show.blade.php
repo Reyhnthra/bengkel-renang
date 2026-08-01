@@ -804,24 +804,8 @@
             }, 4500);
         }
 
-        async function fallbackDownloadBlob(blob, filename) {
+        function fallbackDownloadBlob(blob, filename) {
             try {
-                const file = new File([blob], filename, { type: 'image/png' });
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            files: [file],
-                            title: 'Story Progress Renang',
-                            text: 'Laporan Progress Renang {{ $student->nama }}'
-                        });
-                        showStoryToast("Berhasil membagikan gambar Story!", "success");
-                        return;
-                    } catch (shareErr) {
-                        if (shareErr.name === 'AbortError') return;
-                        console.warn("Share API fallback to direct link:", shareErr);
-                    }
-                }
-
                 const blobUrl = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = blobUrl;
