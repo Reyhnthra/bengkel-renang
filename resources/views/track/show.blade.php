@@ -689,24 +689,60 @@
 
                 let canvas;
                 if (window.html2canvas) {
-                    canvas = await html2canvas(targetEl, {
-                        scale: 3,
-                        useCORS: true,
-                        allowTaint: true,
-                        backgroundColor: '#07364B',
-                        scrollX: 0,
-                        scrollY: 0,
-                        logging: false,
-                        onclone: (clonedDoc) => {
-                            clonedDoc.querySelectorAll('style').forEach(style => {
-                                try {
-                                    style.innerHTML = style.innerHTML
-                                        .replace(/oklab\([^)]+\)/gi, '#07364B')
-                                        .replace(/oklch\([^)]+\)/gi, '#07364B');
-                                } catch(e){}
-                            });
-                        }
-                    });
+                    try {
+                        canvas = await html2canvas(targetEl, {
+                            scale: 3,
+                            useCORS: true,
+                            allowTaint: true,
+                            backgroundColor: '#07364B',
+                            scrollX: 0,
+                            scrollY: 0,
+                            logging: false,
+                            onclone: (clonedDoc) => {
+                                Array.from(clonedDoc.querySelectorAll('link[rel="stylesheet"]')).forEach(link => {
+                                    try {
+                                        let cssText = '';
+                                        if (link.sheet && link.sheet.cssRules) {
+                                            Array.from(link.sheet.cssRules).forEach(rule => {
+                                                cssText += rule.cssText + '\n';
+                                            });
+                                        }
+                                        if (cssText) {
+                                            const cleanedText = cssText
+                                                .replace(/oklab\([^)]+\)/gi, '#07364B')
+                                                .replace(/oklch\([^)]+\)/gi, '#07364B');
+                                            const styleEl = clonedDoc.createElement('style');
+                                            styleEl.textContent = cleanedText;
+                                            link.parentNode.insertBefore(styleEl, link);
+                                            link.parentNode.removeChild(link);
+                                        }
+                                    } catch(e){}
+                                });
+
+                                clonedDoc.querySelectorAll('style').forEach(style => {
+                                    try {
+                                        style.innerHTML = style.innerHTML
+                                            .replace(/oklab\([^)]+\)/gi, '#07364B')
+                                            .replace(/oklch\([^)]+\)/gi, '#07364B');
+                                    } catch(e){}
+                                });
+                            }
+                        });
+                    } catch (h2cErr) {
+                        console.warn("html2canvas error, falling back to htmlToImage:", h2cErr);
+                    }
+                }
+
+                if (!canvas && window.htmlToImage) {
+                    try {
+                        canvas = await htmlToImage.toCanvas(targetEl, {
+                            pixelRatio: 3,
+                            backgroundColor: '#07364B',
+                            cacheBust: true
+                        });
+                    } catch(h2iErr) {
+                        console.warn("htmlToImage error:", h2iErr);
+                    }
                 }
 
                 // Restore preview scale after snapshot
