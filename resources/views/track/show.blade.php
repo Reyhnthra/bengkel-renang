@@ -1,5 +1,14 @@
 @php
     $logoPath = public_path('images/logo.jpeg');
+    if (!file_exists($logoPath)) {
+        $logoPath = base_path('public/images/logo.jpeg');
+    }
+    if (!file_exists($logoPath)) {
+        $logoPath = '/home/beny1818/public_html/images/logo.jpeg';
+    }
+    if (!file_exists($logoPath)) {
+        $logoPath = '/home/beny1818/repositories/bengkel-renang/public/images/logo.jpeg';
+    }
     $logoBase64 = file_exists($logoPath) ? 'data:image/jpeg;base64,' . base64_encode(file_get_contents($logoPath)) : asset('images/logo.jpeg');
 @endphp
 <!DOCTYPE html>
@@ -701,6 +710,10 @@
                             useCORS: true,
                             allowTaint: true,
                             backgroundColor: '#07364B',
+                            scrollX: 0,
+                            scrollY: 0,
+                            windowWidth: 324,
+                            windowHeight: 576,
                             logging: false,
                             onclone: (clonedDoc) => {
                                 clonedDoc.querySelectorAll('style').forEach(style => {
