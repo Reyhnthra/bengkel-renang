@@ -756,8 +756,9 @@
                     throw new Error("Gagal membuat gambar.");
                 }
 
-                canvas.toBlob((blob) => {
-                    const fileName = `progress-renang-{{ Str::slug($student->nama) }}.png`;
+                canvas.toBlob(async (blob) => {
+                    const timeStamp = new Date().getTime();
+                    const fileName = `progress-renang-{{ Str::slug($student->nama) }}-${timeStamp}.png`;
 
                     if (!blob) {
                         showStoryToast("Gagal membuat data gambar.", "error");
@@ -766,7 +767,7 @@
                         return;
                     }
 
-                    fallbackDownloadBlob(blob, fileName);
+                    await fallbackDownloadBlob(blob, fileName);
                     text.innerText = originalText;
                     btn.disabled = false;
                 }, 'image/png');
@@ -803,8 +804,24 @@
             }, 4500);
         }
 
-        function fallbackDownloadBlob(blob, filename) {
+        async function fallbackDownloadBlob(blob, filename) {
             try {
+                const file = new File([blob], filename, { type: 'image/png' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: 'Story Progress Renang',
+                            text: 'Laporan Progress Renang {{ $student->nama }}'
+                        });
+                        showStoryToast("Berhasil membagikan gambar Story!", "success");
+                        return;
+                    } catch (shareErr) {
+                        if (shareErr.name === 'AbortError') return;
+                        console.warn("Share API fallback to direct link:", shareErr);
+                    }
+                }
+
                 const blobUrl = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = blobUrl;
@@ -813,7 +830,7 @@
                 link.click();
                 document.body.removeChild(link);
                 setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
-                showStoryToast("Gambar Story berhasil diunduh! Silakan buka Instagram & unggah gambar ini ke Story Anda.", "success");
+                showStoryToast("Gambar Story berhasil diunduh!", "success");
             } catch (err) {
                 console.error("Download fallback error:", err);
                 showStoryToast("Gagal mengunduh gambar story.", "error");
