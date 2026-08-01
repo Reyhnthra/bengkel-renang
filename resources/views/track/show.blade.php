@@ -306,9 +306,7 @@
                                 <!-- Header -->
                                 <div class="flex justify-between items-center">
                                     <div class="flex items-center space-x-2 shrink-0">
-                                        <div class="w-9 h-9 rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-white/20 bg-white shrink-0">
-                                            <img src="{{ $logoBase64 }}" alt="Logo" class="w-full h-full object-cover">
-                                        </div>
+                                        <div class="w-9 h-9 rounded-full shadow-lg border-2 border-white/20 bg-white shrink-0 bg-cover bg-center" style="background-image: url('{{ $logoBase64 }}');"></div>
                                         <div class="flex flex-col text-left">
                                             <h4 class="font-bold text-[13px] leading-snug text-white whitespace-nowrap m-0">Bengkel Renang</h4>
                                             <span class="text-[9px] text-teal-200 tracking-wider font-semibold uppercase whitespace-nowrap leading-none mt-0.5">Laporan Sesi</span>
@@ -428,9 +426,7 @@
                         <div class="relative z-10 flex flex-col h-full p-5 justify-between">
                             <!-- Header Top-Left -->
                             <div class="flex items-center space-x-2.5">
-                                <div class="w-9 h-9 rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-[#FDB813] bg-[#FDB813] shrink-0">
-                                    <img src="{{ $logoBase64 }}" alt="Logo" class="w-full h-full object-cover">
-                                </div>
+                                <div class="w-9 h-9 rounded-full shadow-lg border-2 border-[#FDB813] bg-[#FDB813] shrink-0 bg-cover bg-center" style="background-image: url('{{ $logoBase64 }}');"></div>
                                 <h4 class="font-extrabold text-[14px] leading-tight text-white whitespace-nowrap" style="text-shadow: 0 2px 4px rgba(0,0,0,0.7);">Bengkel Renang</h4>
                             </div>
 
