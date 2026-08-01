@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="googlef3ae630b7e2078da" />
+    <meta name="google-site-verification" content="n4H5NMB7Jlt_pak6SknI6_-QMvuRnw6AwR5xc" />
     <title>Bengkel Renang - Gajahdepa Akuatik Sumedang</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com">

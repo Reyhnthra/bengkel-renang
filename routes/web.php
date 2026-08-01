@@ -13,6 +13,11 @@ use App\Http\Controllers\CoachDashboardController;
 // Halaman Landing Page Utama
 Route::get('/', [TrackingController::class, 'index'])->name('landing');
 
+// Direct access ke /track via GET akan dialihkan ke landing page agar tidak 405 error
+Route::get('/track', function () {
+    return redirect()->route('landing');
+});
+
 // Proses saat orang tua klik tombol 'View Progress' (Mencari ID, dibatasi 10 request/menit untuk cegah enumerasi)
 Route::post('/track', [TrackingController::class, 'search'])->middleware('throttle:10,1')->name('track.search');
 

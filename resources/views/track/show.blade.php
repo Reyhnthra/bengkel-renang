@@ -16,6 +16,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="googlef3ae630b7e2078da" />
+    <meta name="google-site-verification" content="n4H5NMB7Jlt_pak6SknI6_-QMvuRnw6AwR5xc" />
     <title>Progress Tracking - {{ $student->nama }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -164,8 +166,8 @@
                         <span>🕒 Sesi Terakhir</span>
                         <span>{{ $latestSession ? \Carbon\Carbon::parse($latestSession->tanggal)->translatedFormat('d M Y') : '-' }}</span>
                     </div>
-                    <h4 class="font-extrabold text-xs text-[#032B53]">{{ $latestSession->topik_sesi ?? '-' }}</h4>
-                    <p class="text-[11px] font-medium text-slate-500 italic leading-relaxed">"{{ $lastReport->catatan ?? 'Belum ada catatan.' }}"</p>
+                    <h4 class="font-extrabold text-xs text-[#032B53]">{{ $latestSession?->topik_sesi ?? '-' }}</h4>
+                    <p class="text-[11px] font-medium text-slate-500 italic leading-relaxed">"{{ $lastReport?->catatan ?? 'Belum ada catatan.' }}"</p>
                 </div>
 
                 <div class="space-y-3 text-center border-t border-slate-100 pt-5">

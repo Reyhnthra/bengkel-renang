@@ -41,8 +41,13 @@ class TrackingController extends Controller
     // 3. Halaman Hasil Progress Tampilan Orang Tua
     public function show($code)
     {
-        // Ambil data siswa dengan relasi session dan progressReport
-        $student = Student::where('id_tracking', $code)->with(['sessions.progressReport'])->firstOrFail();
+        // Ambil data siswa dengan relasi session dan progressReport (case-insensitive)
+        $student = Student::where('id_tracking', strtoupper($code))->with(['sessions.progressReport'])->first();
+
+        // Jika ID tidak ditemukan, kembalikan ke landing dengan pesan error ramah
+        if (!$student) {
+            return redirect()->route('landing')->with('error', 'ID Tracking "' . strtoupper($code) . '" tidak ditemukan. Silakan periksa kembali ID yang dimasukkan.');
+        }
 
         // --- PERBAIKAN DI SINI: GUNAKAN ID BUKAN TANGGAL ---
         $sessionsCount = $student->sessions->count();
@@ -64,7 +69,7 @@ class TrackingController extends Controller
         $progPercent = $lastReport ? round(($gBebas + $gPunggung + $gDada + $gKupu) / 4) : 0;
         
         // Hitung umur & total kehadiran aktif
-        $usiaSiswa = Carbon::parse($student->tanggal_lahir)->age;
+        $usiaSiswa = $student->tanggal_lahir ? Carbon::parse($student->tanggal_lahir)->age : 0;
         $streakCount = $student->sessions->where('attendance_status', 'hadir')->count();
 
         // Urutkan riwayat sesi dari yang paling baru (ID terbesar)
