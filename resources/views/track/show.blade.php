@@ -696,7 +696,16 @@
                         backgroundColor: '#07364B',
                         scrollX: 0,
                         scrollY: 0,
-                        logging: false
+                        logging: false,
+                        onclone: (clonedDoc) => {
+                            clonedDoc.querySelectorAll('style').forEach(style => {
+                                try {
+                                    style.innerHTML = style.innerHTML
+                                        .replace(/oklab\([^)]+\)/gi, '#07364B')
+                                        .replace(/oklch\([^)]+\)/gi, '#07364B');
+                                } catch(e){}
+                            });
+                        }
                     });
                 }
 
