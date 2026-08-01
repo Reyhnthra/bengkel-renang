@@ -418,7 +418,7 @@
                     </div>
 
                     <!-- Template 2 -->
-                    <div id="story-template-2" class="relative w-[324px] h-[576px] rounded-3xl overflow-hidden text-white flex flex-col justify-between shadow-2xl transition-all duration-300 hidden" style="background-color: #07364B; background-image: linear-gradient(180deg, #07364B 0%, #052635 100%);">
+                    <div id="story-template-2" class="relative w-[324px] h-[576px] rounded-3xl overflow-hidden text-white flex flex-col justify-between shadow-2xl transition-all duration-300 hidden" style="background-color: #07364B; background-image: linear-gradient(180deg, #07364B 0%, #052635 100%); -webkit-font-smoothing: antialiased;">
                         <!-- Background Layer -->
                         <div id="story-bg-2" class="absolute inset-0 bg-cover bg-center z-0 opacity-0 transition-opacity duration-300"></div>
                         <div class="absolute top-0 inset-x-0 h-40 z-0 pointer-events-none" style="background: linear-gradient(180deg, rgba(7, 54, 75, 0.8) 0%, transparent 100%);"></div>
@@ -431,7 +431,7 @@
                                 <div class="w-9 h-9 rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-[#FDB813] bg-[#FDB813] shrink-0">
                                     <img src="{{ $logoBase64 }}" alt="Logo" class="w-full h-full object-cover">
                                 </div>
-                                <h4 class="font-extrabold text-[14px] leading-tight text-white drop-shadow-md whitespace-nowrap">Bengkel Renang</h4>
+                                <h4 class="font-extrabold text-[14px] leading-tight text-white whitespace-nowrap" style="text-shadow: 0 2px 4px rgba(0,0,0,0.7);">Bengkel Renang</h4>
                             </div>
 
                             <!-- Main Content (Bottom area) -->
@@ -440,39 +440,39 @@
                                 <div class="flex justify-between items-end">
                                     <!-- Left: Score -->
                                     <div>
-                                        <span class="text-[9.5px] text-white/90 font-bold uppercase tracking-widest block mb-0.5 drop-shadow-md">NILAI SESI</span>
+                                        <span class="text-[9.5px] text-white/90 font-bold uppercase tracking-widest block mb-0.5" style="text-shadow: 0 1px 3px rgba(0,0,0,0.7);">NILAI SESI</span>
                                         <div class="flex items-baseline space-x-1">
-                                            <span id="story-score-2" class="text-6xl font-black leading-none drop-shadow-lg">90</span>
-                                            <span class="text-lg font-bold text-white/80">/100</span>
+                                            <span id="story-score-2" class="text-6xl font-black leading-none" style="text-shadow: 0 3px 6px rgba(0,0,0,0.8);">90</span>
+                                            <span class="text-lg font-bold text-white/80" style="text-shadow: 0 2px 4px rgba(0,0,0,0.7);">/100</span>
                                         </div>
-                                        <div class="mt-1 flex items-center space-x-1.5 text-teal-300 font-bold drop-shadow-md">
+                                        <div class="mt-1 flex items-center space-x-1.5 text-teal-300 font-bold" style="text-shadow: 0 1px 3px rgba(0,0,0,0.7);">
                                             <span id="story-praise-2" class="text-xs">Luar Biasa!</span>
                                             <span id="story-stars-2" class="text-xs">⭐⭐⭐⭐⭐</span>
                                         </div>
                                     </div>
                                     <!-- Right: Session -->
                                     <div class="text-right">
-                                        <span class="text-[9px] text-white/80 tracking-widest uppercase font-bold whitespace-nowrap block drop-shadow-md">SESI KE</span>
-                                        <span id="story-meeting-2" class="font-extrabold text-[#FDB813] text-3xl leading-none drop-shadow-lg">24</span>
+                                        <span class="text-[9px] text-white/90 tracking-widest uppercase font-bold whitespace-nowrap block" style="text-shadow: 0 1px 3px rgba(0,0,0,0.7);">SESI KE</span>
+                                        <span id="story-meeting-2" class="font-extrabold text-[#FDB813] text-3xl leading-none" style="text-shadow: 0 2px 5px rgba(0,0,0,0.8);">24</span>
                                     </div>
                                 </div>
 
                                 <!-- Name and Student Info -->
                                 <div>
-                                    <h2 class="text-[22px] font-black tracking-tight drop-shadow-lg leading-tight">{{ $student->nama }}</h2>
+                                    <h2 class="text-[22px] font-black tracking-tight leading-tight" style="text-shadow: 0 2px 5px rgba(0,0,0,0.8);">{{ $student->nama }}</h2>
                                     <div class="flex items-center space-x-2 mt-1.5 whitespace-nowrap shrink-0">
-                                        <span class="bg-black/40 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold border border-white/20 shadow-sm shrink-0">
+                                        <span class="bg-black/50 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold border border-white/20 shadow-sm shrink-0">
                                             {{ ucfirst($student->level ?? 'Perenang Muda') }}
                                         </span>
-                                        <div class="text-[10px] text-white/90 font-semibold flex items-center space-x-1 drop-shadow-md shrink-0">
-                                            <svg class="w-3 h-3 text-teal-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        <div class="text-[10px] text-white/90 font-semibold flex items-center space-x-1 shrink-0" style="text-shadow: 0 1px 3px rgba(0,0,0,0.7);">
+                                            <svg class="w-3 h-3 text-teal-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                             <span id="story-date-2">30 Jun 2025</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Quote -->
-                                <div class="bg-[#07364B]/80 border border-white/10 p-3 rounded-xl relative overflow-hidden">
+                                <div class="bg-[#07364B]/85 border border-white/15 p-3 rounded-xl relative overflow-hidden backdrop-blur-xs">
                                     <p id="story-quote-2" class="text-[11px] font-medium text-white/95 italic leading-relaxed relative z-10">
                                         "Sangat baik! Pernapasan sudah ritmis dan konsisten."
                                     </p>
@@ -481,7 +481,7 @@
                             </div>
 
                             <!-- Footer -->
-                            <div class="flex justify-between items-center text-[9px] text-white/60 font-medium pt-2 mt-3 border-t border-white/10">
+                            <div class="flex justify-between items-center text-[9px] text-white/70 font-medium pt-2 mt-3 border-t border-white/10" style="text-shadow: 0 1px 2px rgba(0,0,0,0.6);">
                                 <div class="flex items-center space-x-1.5">
                                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                                     <span>@bengkelrenang</span>
