@@ -472,7 +472,7 @@
                                 </div>
 
                                 <!-- Quote -->
-                                <div class="bg-[#07364B]/85 border border-white/15 p-3 rounded-xl relative overflow-hidden backdrop-blur-xs">
+                                <div class="bg-[#07364B]/85 border border-white/15 p-3 rounded-xl relative overflow-hidden">
                                     <p id="story-quote-2" class="text-[11px] font-medium text-white/95 italic leading-relaxed relative z-10">
                                         "Sangat baik! Pernapasan sudah ritmis dan konsisten."
                                     </p>
@@ -716,9 +716,17 @@
                             windowHeight: 576,
                             logging: false,
                             onclone: (clonedDoc) => {
+                                clonedDoc.querySelectorAll('*').forEach(el => {
+                                    if (el.style) {
+                                        el.style.backdropFilter = 'none';
+                                        el.style.webkitBackdropFilter = 'none';
+                                    }
+                                });
                                 clonedDoc.querySelectorAll('style').forEach(style => {
                                     try {
                                         style.innerHTML = style.innerHTML
+                                            .replace(/backdrop-filter:[^;]+;/gi, '')
+                                            .replace(/-webkit-backdrop-filter:[^;]+;/gi, '')
                                             .replace(/oklab\([^)]+\)/gi, '#07364B')
                                             .replace(/oklch\([^)]+\)/gi, '#07364B');
                                     } catch(e){}
