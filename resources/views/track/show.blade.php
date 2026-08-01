@@ -660,7 +660,7 @@
             }
         }
 
-        async function downloadStoryImage() {
+       async function downloadStoryImage() {
             const btn = document.getElementById('btn-share');
             const text = document.getElementById('share-text');
             const originalText = text.innerText;
@@ -668,124 +668,47 @@
             btn.disabled = true;
 
             const targetId = currentTemplate === 1 ? 'story-template' : 'story-template-2';
-            const originalStoryEl = document.getElementById(targetId);
-            if (!originalStoryEl) {
+            const targetEl = document.getElementById(targetId);
+            const scaleWrapper = document.getElementById('story-scale-wrapper');
+            if (!targetEl || !scaleWrapper) {
                 text.innerText = originalText;
                 btn.disabled = false;
                 return;
             }
 
-            // Create clone container in top-left with opacity 0 to prevent font metric calculation bugs in mobile browsers
-            const cloneContainer = document.createElement('div');
-            cloneContainer.style.position = 'fixed';
-            cloneContainer.style.left = '0px';
-            cloneContainer.style.top = '0px';
-            cloneContainer.style.width = '324px';
-            cloneContainer.style.height = '576px';
-            cloneContainer.style.zIndex = '-9999';
-            cloneContainer.style.opacity = '0';
-            cloneContainer.style.pointerEvents = 'none';
-            cloneContainer.style.overflow = 'hidden';
-            
-            const clonedEl = originalStoryEl.cloneNode(true);
-            clonedEl.style.transform = 'none';
-            clonedEl.style.borderRadius = '0px';
-            clonedEl.style.margin = '0';
-            clonedEl.classList.remove('hidden');
-
-            cloneContainer.appendChild(clonedEl);
-            document.body.appendChild(cloneContainer);
+            // Temporarily reset preview scale to 1:1 for crisp 3x HD canvas rendering
+            const savedTransform = scaleWrapper.style.transform;
+            scaleWrapper.style.transform = 'none';
 
             try {
-                // Ensure all fonts, images, and background photos are 100% loaded & decoded before snapshotting
                 if (document.fonts && document.fonts.ready) {
                     try { await document.fonts.ready; } catch(e){}
                 }
 
-                const imgEls = Array.from(clonedEl.querySelectorAll('img'));
-                await Promise.all(imgEls.map(img => {
-                    if (img.complete && img.naturalWidth !== 0) {
-                        if (img.decode) return img.decode().catch(() => {});
-                        return Promise.resolve();
-                    }
-                    return new Promise(resolve => {
-                        img.onload = resolve;
-                        img.onerror = resolve;
-                    });
-                }));
-
-                const bgDivs = clonedEl.querySelectorAll('[style*="background-image"]');
-                await Promise.all(Array.from(bgDivs).map(div => {
-                    const urlMatch = div.style.backgroundImage.match(/url\(['"]?(.*?)['"]?\)/);
-                    if (urlMatch && urlMatch[1]) {
-                        return new Promise(resolve => {
-                            const tempImg = new Image();
-                            tempImg.onload = resolve;
-                            tempImg.onerror = resolve;
-                            tempImg.src = urlMatch[1];
-                        });
-                    }
-                    return Promise.resolve();
-                }));
-
-                await new Promise(r => setTimeout(r, 100));
+                await new Promise(r => setTimeout(r, 50));
 
                 let canvas;
-                // Prioritize html2canvas on mobile devices for reliable inline styles and Base64 image rendering
                 if (window.html2canvas) {
-                    try {
-                        canvas = await html2canvas(clonedEl, {
-                            scale: 3,
-                            useCORS: true,
-                            allowTaint: true,
-                            backgroundColor: '#07364B',
-                            scrollX: 0,
-                            scrollY: 0,
-                            windowWidth: 324,
-                            windowHeight: 576,
-                            logging: false,
-                            onclone: (clonedDoc) => {
-                                clonedDoc.querySelectorAll('*').forEach(el => {
-                                    if (el.style) {
-                                        el.style.backdropFilter = 'none';
-                                        el.style.webkitBackdropFilter = 'none';
-                                    }
-                                });
-                                clonedDoc.querySelectorAll('style').forEach(style => {
-                                    try {
-                                        style.innerHTML = style.innerHTML
-                                            .replace(/backdrop-filter:[^;]+;/gi, '')
-                                            .replace(/-webkit-backdrop-filter:[^;]+;/gi, '')
-                                            .replace(/oklab\([^)]+\)/gi, '#07364B')
-                                            .replace(/oklch\([^)]+\)/gi, '#07364B');
-                                    } catch(e){}
-                                });
-                            }
-                        });
-                    } catch (h2cErr) {
-                        console.warn("html2canvas error, trying htmlToImage:", h2cErr);
-                    }
-                }
-
-                if (!canvas && window.htmlToImage) {
-                    canvas = await htmlToImage.toCanvas(clonedEl, {
-                        pixelRatio: 3,
+                    canvas = await html2canvas(targetEl, {
+                        scale: 3,
+                        useCORS: true,
+                        allowTaint: true,
                         backgroundColor: '#07364B',
-                        cacheBust: true,
-                        fontEmbedCSS: '',
-                        skipFonts: true
+                        scrollX: 0,
+                        scrollY: 0,
+                        logging: false
                     });
                 }
 
-                if (document.body.contains(cloneContainer)) {
-                    document.body.removeChild(cloneContainer);
-                }
+                // Restore preview scale after snapshot
+                scaleWrapper.style.transform = savedTransform;
+                updateScale();
 
                 if (!canvas) {
                     throw new Error("Gagal membuat gambar.");
                 }
 
-                canvas.toBlob(async (blob) => {
+                canvas.toBlob((blob) => {
                     const timeStamp = new Date().getTime();
                     const fileName = `progress-renang-{{ Str::slug($student->nama) }}-${timeStamp}.png`;
 
@@ -796,15 +719,16 @@
                         return;
                     }
 
-                    await fallbackDownloadBlob(blob, fileName);
+                    fallbackDownloadBlob(blob, fileName);
                     text.innerText = originalText;
                     btn.disabled = false;
                 }, 'image/png');
 
             } catch (err) {
                 console.error("downloadStoryImage error:", err);
-                if (document.body.contains(cloneContainer)) {
-                    document.body.removeChild(cloneContainer);
+                if (scaleWrapper) {
+                    scaleWrapper.style.transform = savedTransform;
+                    updateScale();
                 }
                 showStoryToast("Gagal mengunduh gambar: " + (err.message || 'Terjadi kesalahan'), "error");
                 text.innerText = originalText;
