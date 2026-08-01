@@ -123,6 +123,7 @@
                                 name="id_tracking" 
                                 value="{{ old('id_tracking') }}"
                                 placeholder="Masukkan ID (misal: BR-XXX)" 
+                                autocomplete="off"
                                 class="w-full bg-[#E6F0FA] border-2 border-[#00A79D] pl-11 pr-4 py-3.5 rounded-2xl text-xs font-bold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase tracking-wide transition-all" 
                                 required>
                         </div>
