@@ -656,11 +656,7 @@
                     document.getElementById('photo-icon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>';
                     document.getElementById('photo-icon').classList.replace('text-pink-500', 'text-blue-500');
                 }
-                reader.readAsDataURL(file);
-            }
-        }
-
-       async function downloadStoryImage() {
+               async function downloadStoryImage() {
             const btn = document.getElementById('btn-share');
             const text = document.getElementById('share-text');
             const originalText = text.innerText;
@@ -670,22 +666,25 @@
             const targetId = currentTemplate === 1 ? 'story-template' : 'story-template-2';
             const targetEl = document.getElementById(targetId);
             const scaleWrapper = document.getElementById('story-scale-wrapper');
+            const storyContainer = document.getElementById('story-container');
             if (!targetEl || !scaleWrapper) {
                 text.innerText = originalText;
                 btn.disabled = false;
                 return;
             }
 
-            // Temporarily reset preview scale to 1:1 for crisp 3x HD canvas rendering
+            // Temporarily reset preview scale & overflow for crisp un-clipped 3x HD canvas rendering
             const savedTransform = scaleWrapper.style.transform;
+            const savedOverflow = storyContainer ? storyContainer.style.overflow : '';
             scaleWrapper.style.transform = 'none';
+            if (storyContainer) storyContainer.style.overflow = 'visible';
 
             try {
                 if (document.fonts && document.fonts.ready) {
                     try { await document.fonts.ready; } catch(e){}
                 }
 
-                await new Promise(r => setTimeout(r, 50));
+                await new Promise(r => setTimeout(r, 60));
 
                 let canvas;
                 if (window.html2canvas) {
@@ -745,8 +744,9 @@
                     }
                 }
 
-                // Restore preview scale after snapshot
+                // Restore preview scale and overflow after snapshot
                 scaleWrapper.style.transform = savedTransform;
+                if (storyContainer) storyContainer.style.overflow = savedOverflow;
                 updateScale();
 
                 if (!canvas) {
@@ -771,12 +771,14 @@
 
             } catch (err) {
                 console.error("downloadStoryImage error:", err);
-                if (scaleWrapper) {
-                    scaleWrapper.style.transform = savedTransform;
-                    updateScale();
-                }
+                if (scaleWrapper) scaleWrapper.style.transform = savedTransform;
+                if (storyContainer) storyContainer.style.overflow = savedOverflow;
+                updateScale();
                 showStoryToast("Gagal mengunduh gambar: " + (err.message || 'Terjadi kesalahan'), "error");
                 text.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
                 btn.disabled = false;
             }
         }
